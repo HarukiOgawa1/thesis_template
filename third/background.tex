@@ -1,9 +1,129 @@
 %!TEX root = ../thesis.tex
 
-\section{シミュレータ}
-\section{エージェント}
-\section{強化学習フレームワーク}
-\section{タスク}
+\section{本章の概要}
+本章では，報酬関数の変化が歩行動作へ与える影響を調査するため，以下の環境と方法で実験を行う．
 
-\subsubsection{etc...}
+\section{実験装置or学習環境}
+本実験の環境を表に示す．
+\begin{table}[hbtp]
+  \caption{Experimental Setup}
+  \label{table:data_type}
+  \centering
+  \begin{tabular}{lcr}
+    \hline
+    OS & Ubuntu 22.04 \\
+    Simulator  & NVIDIA Isaac Sim \\
+    Framework  & NVIDIA Isaac Lab \\
+    CPU & hoge \\
+    GPU & hoge \\
+    RAM & hoge \\
+    Storage & hoge \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section{環境モデル}
+\section{エージェント}
+本研究では，エージェントとしてNVIDIA Isaac Lab [5] にて標準提供されているUnitree G1のロボットモデルを使用する．本モデルの外観と初期姿勢を図Xに示す．また，初期姿勢における各関節の初期角度，トルク，角速度の仕様一覧を表Yに示す．
+\begin{figure}[hbtp]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.8]
+      {images/RaspberryPiMouse.png}
+ \caption{Example}
+ \label{Fig:Example}
+\end{figure}
+
+\begin{table}[H]
+  \caption{Initial posture angle, torque and angular velocity of each joint}
+  \label{table:joint_posture}
+  \centering
+  \begin{tabular}{|l|c|c|c|}
+    \hline
+    Joint & Initial attitude angle [rad] & Torque [Nm] & Velocity [rad/s] \\
+    \hline
+    Torso & 0 & 88 & 32 \\
+    \hline
+    Hip roll & 0& 88 & 32 \\
+    \hline
+    Hip pitch & 0& 88 & 32 \\
+    \hline
+    Hip yaw & 0& 88 & 32 \\
+    \hline
+    Ankle roll & 0& 40 & 53 \\
+    \hline
+    Ankle pitch & 0& 40 & 53 \\
+    \hline
+    Shoulder roll &0 & 21 & 53 \\
+    \hline
+    Shoulder pitch &0 & 21 & 53 \\
+    \hline
+    Shoulder yaw &0 & 21 & 53 \\
+    \hline
+    Elbow roll &0 & 21 & 53 \\
+    \hline
+    Elbow pitch &0 & 21 & 53 \\
+    \hline
+    Hand zero & 0& 0.7 & 23 \\
+    \hline
+    Hand one & 0& 0.7 & 23 \\
+    \hline
+    Hand two & 0& 0.7 & 23 \\
+    \hline
+    Hand three &0 & 0.7 & 23 \\
+    \hline
+    Hand four & 0& 0.7 & 23 \\
+    \hline
+    Hand five & 0& 0.7 & 23 \\
+    \hline
+    Hand six & 0& 0.7 & 23 \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section{学習におけるランダム要素}
+\section{状態・行動空間}
+\section{報酬関数}
+本研究では，NVIDIA Isaac Lab，locomotion（二足歩行ロボットが歩行動作＝タスク）を用いる．
+本研究における報酬関数は以下の通りである．\par
+
+報酬項を説明するときに目的ごとに節で分けて議論するか
+負の報酬をペナルティというか
+\begin{itemize}
+ \item $R_{termination\_penalty}$ : エピソードが早期終了した場合（例：転倒して胴体が接触した場合）に，負の報酬（ペナルティ）を与える．
+ \par
+  $r_{\text{terminate}} = \mathbb{I}(\text{is\_terminated})$
+ \item $R_{track\_lin\_vel\_xy\_exp}$（XY線形速度追従） : エージェントのヨー軸（向いている方向）を基準としたXY平面での線形速度が，目標速度にどれくらい近いか評価し，誤差が小さいほど高い報酬を与える．誤差の評価には指数カーネル（共分散）が使用される．
+ \par
+ $r_{\text{track\_lin}} = \exp\left(-\frac{\|\mathbf{v}_{xy}^{\text{cmd}} - \mathbf{v}_{xy}^{\text{base\_yaw}}\|_2^2}{\sigma^2}\right)$
+ \item $R_{track\_ang\_vel\_z\_exp}$（Z軸角速度追従） : エージェントの目標角速度にどれだけ近いかを評価する．
+ \par
+ $r_{\text{track\_ang}} = \exp\left(-\frac{(\omega_z^{\text{cmd}} - \omega_z^{\text{world}})^2}{\sigma^2}\right)$
+
+ \item $R_{feet\_air\_time}$（足の滞空時間） : 足が地面から離れている時間（滞空時間）が一定の閾値（）を超えた場合に報酬を与える．これにより，足を地面に擦るのではなく，持ち上げて歩行する動作を促す．
+ \par
+ $r_{\text{air\_time}} = \max(0, \min(T_{\text{air}, L}, T_{\text{air}, R}) - T_{\text{thresh}})$
+ \item $R_{feet\_slide}$（足の滑りペナルティ） : 足が地面に接地していると判定されている間に，その足がワールド座標系のXY方向に速度を持つ（＝滑っている）ことに対してペナルティを与える．
+ \par
+ $r_{\text{slide}} = \sum_{f \in \{\text{left, right}\}} \|\mathbf{v}_{xy}^{\text{foot}, f}\|_2 \cdot \mathbb{I}(F_{\text{contact}, f} > F_{\text{thresh}})$
+ \item $R_{flat\_orientation\_l2}$（水平姿勢維持ペナルティ） : エージェントの胴体が水平から傾くことに対してペナルティを与える．
+ \par
+ $r_{\text{orientation}} = \| \mathbf{g}_{\text{proj}, xy}^{\text{base}} \|_2^2 = (g_x^{\text{base}})^2 + (g_y^{\text{base}})^2$
+ \item $R_{dof\_pos\_limits}$（関節可動域ペナルティ） : 関節角度が設定された可動域の上限または下限に近づくことに対してペナルティを与える．
+ \par
+ \item $R_{joint\_deviation\_...}$（デフォルト姿勢からの逸脱ペナルティ） : 
+ \par
+ \item $R_{action\_rate\_l2}$ : 
+ \par
+ $r_{\text{action\_rate}} = \| \mathbf{a}_t - \mathbf{a}_{t-1} \|_2^2$
+ \item $R_{dof\_acc\_l2}$ : 
+ \par
+ \item $R_{dof\_torques\_l2}$ : 
+ \par
+ $r_{\text{torque}} = \| \mathbf{\tau} \|_2^2 = \sum_{j \in \text{joints}} \tau_j^2$
+\end{itemize}
+
+\section{評価指標}
+本研究では，以下の評価基準に基づいてエージェントの性能を評価し，分析する．
+
+
 \newpage
