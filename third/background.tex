@@ -3,7 +3,7 @@
 \section{本章の概要}
 本章では，報酬関数の変化が歩行動作へ与える影響を調査するため，以下の環境と方法で実験を行う．
 
-\section{実験装置or学習環境}
+\section{実験装置}
 本実験の環境を表に示す．
 \begin{table}[hbtp]
   \caption{Experimental Setup}
@@ -23,6 +23,9 @@
 \end{table}
 
 \section{環境モデル}
+実験を行う環境モデルについて述べる．環境モデルはNVIDIA Isaac Lab にて標準提供されているlocomotion（二足歩行ロボットが歩行動作＝タスク）を使用する．本モデルの外観を図Xに示す．
+下に図を貼るG1とH1の環境
+
 \section{エージェント}
 本研究では，エージェントとしてNVIDIA Isaac Lab [5] にて標準提供されているUnitree G1のロボットモデルを使用する．本モデルの外観と初期姿勢を図Xに示す．また，初期姿勢における各関節の初期角度，トルク，角速度の仕様一覧を表Yに示す．
 \begin{figure}[hbtp]
@@ -81,17 +84,35 @@
 \end{table}
 
 \section{学習におけるランダム要素}
+
+
 \section{状態・行動空間}
-\section{報酬関数}
+本学習モデルにおける観測空間（状態空間）および行動空間の定義は以下の通りである．
+
+\subsection{観測空間}
+\begin{itemize}
+\item ロボットの位置と線形速度あとで式を書く
+\item 目標となる線形速度と角速度
+\item 各関節の速度
+\item 各足の接触状態
+\item 周囲環境（不整地環境のみ）ロボットの足元の地形形状を把握するための地形の高さ情報
+\end{itemize}
+\subsection{行動空間}
+
+
+\section{報酬関数（報酬項）}
 本研究では，NVIDIA Isaac Lab，locomotion（二足歩行ロボットが歩行動作＝タスク）を用いる．
 本研究における報酬関数は以下の通りである．\par
 
-報酬項を説明するときに目的ごとに節で分けて議論するか
-負の報酬をペナルティというか
 \begin{itemize}
- \item $R_{termination\_penalty}$ : エピソードが早期終了した場合（例：転倒して胴体が接触した場合）に，負の報酬（ペナルティ）を与える．
+ \item $R_{termination\_penalty}$ : ロボットが転倒などの致命的な失敗によりエピソードを終了した場合に，学習がそのような状態を避けるよう促すためである．これは，エージェントに対してこの状態に陥ると大きな大きな不利益があることを学習させ，転倒を避ける動作を促す．
  \par
-  $r_{\text{terminate}} = \mathbb{I}(\text{is\_terminated})$
+  \begin{equation}
+    r_{term} = w_{term} \cdot \mathbb{1}_{terminated}
+  \end{equation}
+% 指示関数の定義を含む詳細な記述例
+ここで，$w_{term} = -200.0$ はペナルティの重み係数であり，$\mathbb{1}_{terminated}$ はエピソードの異常終了を判定する指示関数である．本モデルにおいて，この項はロボットの胴体（torso\_link）が地面に接触した瞬間に適用され，エージェントに対して転倒を回避する強力なバイアスを与える役割を果たす．
+  
  \item $R_{track\_lin\_vel\_xy\_exp}$（XY線形速度追従） : エージェントのヨー軸（向いている方向）を基準としたXY平面での線形速度が，目標速度にどれくらい近いか評価し，誤差が小さいほど高い報酬を与える．誤差の評価には指数カーネル（共分散）が使用される．
  \par
  $r_{\text{track\_lin}} = \exp\left(-\frac{\|\mathbf{v}_{xy}^{\text{cmd}} - \mathbf{v}_{xy}^{\text{base\_yaw}}\|_2^2}{\sigma^2}\right)$
@@ -124,6 +145,9 @@
 
 \section{評価指標}
 本研究では，以下の評価基準に基づいてエージェントの性能を評価し，分析する．
-
+\begin{itemize}
+  \item 
+  
+ \end{itemize}
 
 \newpage
