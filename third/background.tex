@@ -1,7 +1,8 @@
 %!TEX root = ../thesis.tex
 
-\section{本章の概要}
-本章では，報酬関数の変化が歩行動作へ与える影響を調査するため，以下の環境と方法で実験を行う．
+
+本章では，報酬関数の変化が歩行動作へ与える影響を調査するために行う実験について述べる．
+まず，学習に使用したシミュレータや実験を行う環境モデル，エージェントについて述べる．なお，本実験ではNVIDIA Isaac Labで標準提供されているUnitree G1の学習環境（locomotion）を用いる．次に，状態，行動空間や報酬関数について述べる．
 
 \section{実験装置}
 本実験の環境を表に示す．
@@ -24,17 +25,20 @@
 
 \section{環境モデル}
 実験を行う環境モデルについて述べる．環境モデルはNVIDIA Isaac Lab にて標準提供されているlocomotion（二足歩行ロボットが歩行動作＝タスク）を使用する．本モデルの外観を図Xに示す．
-下に図を貼るG1とH1の環境
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/png/g1_flat.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/png/g1_rough.png}
+\end{minipage}
+\end{figure}
 
 \section{エージェント}
 本研究では，エージェントとしてNVIDIA Isaac Lab [5] にて標準提供されているUnitree G1のロボットモデルを使用する．本モデルの外観と初期姿勢を図Xに示す．また，初期姿勢における各関節の初期角度，トルク，角速度の仕様一覧を表Yに示す．
-\begin{figure}[hbtp]
-  \centering
- \includegraphics[keepaspectratio, scale=0.8]
-      {images/RaspberryPiMouse.png}
- \caption{Example}
- \label{Fig:Example}
-\end{figure}
 
 \begin{table}[H]
   \caption{Initial posture angle, torque and angular velocity of each joint}

@@ -1,43 +1,113 @@
 %!TEX root = ../thesis.tex
 
 \section{背景}
-一応geminiでまとめた結果…\par
 
-近年，少子高齢化に伴う労働人口の減少が深刻化しており，ヒューマノイドロボットには，人間に代わる作業の自動化や，災害現場などの危険な環境下における代替手段としての期待が高まっている．
-これまでヒューマノイドロボットの歩行制御には，物理モデルに基づく制御手法が多く用いられてきた．しかし近年では，複雑な環境への適応能力や，高度な動作獲得の可能性から，深層強化学習（Deep Reinforcement Learning: DRL）を用いたアプローチが急速に発展している．
-DRLでは，ロボット（エージェント）が環境と相互作用し，得られる「報酬」を最大化するように行動を学習する．この際，どのような行動に対して報酬を与えるかを定義した「報酬関数」の設計が，学習の成否や獲得される動作の質を決定づける重要な要素となる．
-しかし，既存の研究動向を俯瞰すると，学習アルゴリズムやネットワーク構造の提案に主眼が置かれる傾向があり，報酬関数の設計論に関する議論は十分になされていないのが現状である．
-多くの研究において，報酬関数内の各パラメータは，設計者の経験則や膨大な回数の試行錯誤（Trial and Error）によって決定されている．近年では大規模言語モデル（LLM）等を用いたパラメータ調整の自動化も試みられているが，最終的に「なぜそのパラメータ設定が良いのか」という因果関係や，各項が歩行性能や動作の質に与えるトレードオフについてはブラックボックス化している側面が否めない．
+近年，少子高齢化に伴う労働人口の減少が深刻化しており，人間に代わる作業の自動化や，災害現場などの危険な環境下での活動手段として，ヒューマノイドロボットへの期待が高まっている．
+これまでヒューマノイドロボットの歩行制御には，主に物理モデルに基づく制御手法が用いられてきた\cite{gu2025humanoid}．しかし近年では，複雑な環境への適応能力や，より高度な動作獲得の可能性から，深層強化学習（Deep Reinforcement Learning: DRL）を用いたアプローチ\cite{bao2024deep}が急速に発展している．
+DRLでは，ロボット（エージェント）が環境と相互作用し，得られる「報酬」を最大化するように行動を学習する．この際，どのような行動に対して報酬を与えるかを定義する「報酬関数」の設計は，学習の成否や獲得される動作の質を決定づける重要な要素である．
+しかし，既存の研究動向を概観すると，学習アルゴリズムやネットワーク構造の提案に主眼が置かれる傾向があり，報酬関数の設計論に関する議論は十分になされていないのが現状である．
+多くの研究において，報酬関数内の各パラメータは，設計者の経験則や膨大な回数の試行錯誤によって決定されている．近年では大規模言語モデル（LLM）等を用いたパラメータ調整の自動化\cite{wu2025stride}も試みられているが，最終的に「なぜそのパラメータ設定が良いのか」という因果関係や，各項が歩行性能や動作の質に与えるトレードオフについてはブラックボックス化している側面が否めない．
 
 
 \begin{figure}[H]
-  \centering
- \includegraphics[keepaspectratio, scale=0.8]
-      {images/RaspberryPiMouse.png}
- \caption{Example}
- \label{Fig:Example}
+    \centering
+    % --- 左の画像 ---
+    \begin{minipage}[b]{0.49\columnwidth} % 幅を0.49より少し下げると並びやすいです
+        \centering
+        % ここにファイル名だけを入れる！
+        \includegraphics[width=1.0\columnwidth]{images/png/digit-amazon.png} 
+        \caption{Digit, Agility Robotics (source: \cite{agility:online})}
+        \label{Fig:digit}
+    \end{minipage}
+    \hfill % 左右の間隔を自動調整
+    % --- 右の画像 ---
+    \begin{minipage}[b]{0.49\columnwidth}
+        \centering
+        \includegraphics[width=1.0\columnwidth]{images/png/atlas-sequencing-blog.png}
+        \caption{Atlas, Boston Dynamics (source: \cite{bostondynamics:atlas})}
+        \label{Fig:atlas}
+    \end{minipage}
 \end{figure}
 
+\newpage
+
 \section{関連研究}
-\begin{itemize}
- \item Revisiting Reward Design and Evaluation for Robust Humanoid Standing and Walking
- \par
- \item https://ieeexplore.ieee.org/document/10654466
- \par
- \item Gait-Conditioned Reinforcement Learning with Multi-Phase Curriculum for Humanoid Locomotion
- \item https://arxiv.org/html/2502.04692v3
- \item 歩行動作の報酬関数に関する論文に触れる
-\end{itemize}
+Van Marumらは，ヒューマノイドロボットの立位および歩行制御において，実世界での性能を定量的に評価，比較するための低コストなベンチマーク手法を提案するともに，
+報酬関数の設計を再考し，従来の規定的な報酬に代わる，制約を最小限に留めた報酬関数を構築した．コマンド追従性や外乱回復などの指標を用いた実験により，提案手法が外乱に対して堅牢な制御器の学習を可能にすることを示している．
+
+\begin{figure}[H]
+  \centering
+  % 左側の画像
+  \begin{subfigure}{0.48\columnwidth} % 少し幅を狭くすると安定します
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/png/disturbance_rejection_success_x.png}
+    \caption{Disturbance rejection test}
+    \label{fig:disturbance_rejection}
+  \end{subfigure}
+  \hfill % ← 左右の図の間に適切な空白を入れます
+  % 右側の画像
+  \begin{subfigure}{0.48\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/png/command_following_test.png}
+    \caption{Command following test}
+    \label{fig:command_following}
+  \end{subfigure}
+  
+  \caption{Experimental results of the proposed method (source: \cite{van2024revisiting})}
+  \label{fig:experimental_results}
+\end{figure}
+Pengらは，ヒューマノイドロボットが歩行，走行，ホッピングといった多様な歩容（Gait）を単一のポリシーで実現するために，歩行周期の位相情報を用いた条件付き強化学習手法を提案している（図\ref{fig:omnih2o_method}）．
+彼らは，学習の進度に合わせてタスクの難易度を調整するマルチフェーズカリキュラムに加え，Gait Maskと呼ばれる報酬設計手法を導入した．
+これは，歩行サイクル中の特定の位相（接地や足の振り出しなど）においてのみ特定の報酬項を有効化あるいは無効化する仕組みである．
+この動的な報酬設計により，静的な報酬関数では競合しがちな制約を適切に分離し，全方向へのロバストな移動動作の獲得に成功している．
+\begin{figure}[H]
+  \centering
+  % 左側の画像：システムアーキテクチャ
+  \begin{subfigure}{0.48\columnwidth}
+    \centering
+    % ファイル名は適宜変更してください
+    \includegraphics[width=1.0\columnwidth]{images/png/Gait-Conditioned.png}
+    \caption{The training framework of OmniH2O}
+    \label{fig:omnih2o_framework}
+  \end{subfigure}
+  \hfill
+  % 右側の画像：Gait Mask（報酬設計表）
+  \begin{subfigure}{0.48\columnwidth}
+    \centering
+    % ファイル名は適宜変更してください
+    \includegraphics[width=1.0\columnwidth]{images/png/Gait-Conditioned2.png}
+    \caption{The mechanism of Gait Mask}
+    \label{fig:gait_mask}
+  \end{subfigure}
+  
+  \caption{Overview of the proposed gait-conditioned reinforcement learning method. (a) illustrates the policy network architecture with gait encoding, and (b) shows the dynamic reward composition using the Gait Mask (source: \cite{peng2025gait}).}
+  \label{fig:omnih2o_method}
+\end{figure}
+
+Wuらは，大規模言語モデル（LLM）を用いて報酬関数の設計から学習実行，フィードバックによる最適化までを全自動化するフレームワーク「STRIDE」を提案している（図\ref{Fig:STRIDE}）．
+STRIDEでは，ロボットの身体構造（URDF）とタスク記述をLLMに入力することで，Python形式の報酬関数コードを生成する．さらに，シミュレーションから得られた学習結果（歩行速度や失敗要因など）をテキスト情報としてLLMにフィードバックし，報酬コードの修正と再学習を自律的に繰り返す．
+比較実験において，STRIDEは従来の手法（EUREKAなど）や人間が設計した報酬関数を上回るパフォーマンスを発揮し，多様な地形でのスプリント動作の獲得に成功している．
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.2]
+      {images/png/STRIDE.png}
+ \caption{STRIDE: Automating Reward Design, Deep Reinforcement Learning Training and Feedback Optimization in Humanoid Robotics Locomotion (source: \cite{wu2025stride})}
+ \label{Fig:STRIDE}
+\end{figure}
+
+
 
 \section{目的}
-本研究は，深層強化学習を用いたヒューマノイドロボットの歩行動作学習を対象とする．本研究は，報酬関数を構成する各パラメータを変更しながら学習を行い，得られた各学習モデルを複数の比較指標によって評価・分析する
-ことを通じて，報酬関数のパラメータが学習プロセスや獲得される歩行動作に与える影響を明らかにすることである．
+本研究では，深層強化学習を用いたヒューマノイドロボットの歩行動作獲得を対象とし，報酬関数の設計が歩行性能や動作に与える影響を明らかにすることを目的とする．
+具体的には，報酬関数を構成する各パラメータを複数の設定で変更しながら学習実験を行い，得られた制御則を複数の定量的な指標を用いて評価，分析する．
+これにより，各報酬項の役割やパラメータ間のトレードオフ関係について考察する．
 
 \section{論文構成}
-本論文の構成を述べる．本論文は，以下の全O章で構成されている．第1章では，本研究の背景や関連技術，目的を述べた．第2章では，本研究に用いた要素技術を述べる．
-第3章では，本研究に用いる問題設定について説明し，学習に使用するフレームワークを述べる．
-第4章では，本研究の議論にした内容を説明する．
-第5章では，実験をする上での予備実験について述べる．
+本論文の構成を述べる．本論文は，以下の全O章で構成されている．第1章では，本研究の背景や関連技術，目的を述べる．
+第2章では，本研究に用いた要素技術を述べる．
+第3章では，本研究に用いる学習環境について述べる．
+第4章では，本研究に用いる評価指標について述べる．
+第5章では，各学習モデルを評価指標で得られた結果について述べる．
 第6章では，実験やその結果に対する考察を述べる．
 第7章では，本研究の成果をまとめ，今後の展望について述べる．
 
