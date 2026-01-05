@@ -2,7 +2,7 @@
 
 
 本章では，報酬関数の変化が歩行動作へ与える影響を調査するために行う実験について述べる．
-まず，学習に使用したシミュレータや実験を行う環境モデル，エージェントについて述べる．なお，本実験ではNVIDIA Isaac Labで標準提供されているUnitree G1の学習環境（locomotion）を用いる．次に，状態，行動空間や報酬関数について述べる．
+まず，学習に使用したシミュレータや実験を行う環境モデル，エージェントについて述べる．なお，本実験ではNVIDIA Isaac Lab\cite{mittal2025isaaclab}で標準提供されているUnitree G1の学習環境（locomotion）を用いる．次に，状態，行動空間や報酬関数について述べる．
 
 \section{実験装置}
 本実験の環境を表に示す．
@@ -66,6 +66,9 @@
     }
 \end{table}
 
+初期姿勢においては，ロボットのベース（骨盤）の高さは0.74 [m]に設定されている．
+また，ロボットの初期の関節角度は，直立姿勢を基準に定義されており，\ref{fig:velocityflat}および\ref{fig:velocityrough}に示すように，Hip Pitch関節は-0.20 [rad]，Knee関節は0.42 [rad]，Ankle Pitch関節は-0.23 [rad]に設定されている．
+
 \section{エージェントと環境モデル}
 本研究では，エージェントとしてNVIDIA Isaac Labにて標準提供されているUnitree G1のロボットモデルを使用する．
 また，実験を行う環境モデルについては，\ref{fig:Environments based on legged locomotion tasks}に示すように，平地環境と不整地環境があり，
@@ -93,6 +96,8 @@
 
 
 \section{状態・行動空間}
+強化学習におけるマルコフ決定過程(MDP)は，状態空間$\mathcal{S}$，行動空間$\mathcal{A}$，遷移確率$P$，報酬関数$R$，割引率$\gamma$の5つの要素から構成される．
+
 \subsection{行動空間}
 行動空間は，ロボットの各関節に対する目標角度司令で構成される連続空間である．制御周期ごとに，ポリシーネットワークから出力された行動
 は，初期姿勢からの相対的な変位として解釈され，スケール係数(0.5)が乗じられた後，デフォルトの関節角度に加算される．
@@ -153,5 +158,29 @@
  $r_{\text{torque}} = \| \mathbf{\tau} \|_2^2 = \sum_{j \in \text{joints}} \tau_j^2$
 \end{itemize}
 
+% Flat環境の報酬関数パラメータ
+\begin{table}[htbp]
+  \centering
+  \caption{Reward Function Parameters for the Unitree G1 Robot in Flat Terrain}
+  \label{tab:g1_flat_reward_params}
+  \small % 表全体の文字サイズを少し小さくする
+  % X は幅に合わせて自動調整・折り返しを行う列指定子
+  \begin{tabularx}{\linewidth}{Xc}
+      \toprule
+      \textbf{Reward term} & \textbf{Weight} \\
+      \midrule
+      Tracking Lin Vel XY & 0.75 \\
+      Tracking Ang Vel Z & 0.75 \\
+      Feet Air Time & 0.75 \\
+      Lin Vel Z L2 & 0.75 \\
+      Action Rate L2 & 0.75 \\
+      DOF Acc L2 & 0.75 \\
+      DOF & 0.75 \\
+      Feet Air Time & 0.75 \\
+      Feet Air Time & 0.75 \\
+      Feet Air Time & 0.75 \\
+      \bottomrule
+  \end{tabularx}
+\end{table}
 
 \newpage
