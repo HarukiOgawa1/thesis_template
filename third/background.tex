@@ -23,85 +23,91 @@
   \end{tabular}
 \end{table}
 
-\section{環境モデル}
-実験を行う環境モデルについて述べる．環境モデルはNVIDIA Isaac Lab にて標準提供されているlocomotion（二足歩行ロボットが歩行動作＝タスク）を使用する．本モデルの外観を図Xに示す．
-\begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/png/g1_flat.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/png/g1_rough.png}
-\end{minipage}
-\end{figure}
 
-\section{エージェント}
-本研究では，エージェントとしてNVIDIA Isaac Lab [5] にて標準提供されているUnitree G1のロボットモデルを使用する．本モデルの外観と初期姿勢を図Xに示す．また，初期姿勢における各関節の初期角度，トルク，角速度の仕様一覧を表Yに示す．
-
-\begin{table}[H]
-  \caption{Initial posture angle, torque and angular velocity of each joint}
-  \label{table:joint_posture}
-  \centering
-  \begin{tabular}{|l|c|c|c|}
-    \hline
-    Joint & Initial attitude angle [rad] & Torque [Nm] & Velocity [rad/s] \\
-    \hline
-    Torso & 0 & 88 & 32 \\
-    \hline
-    Hip roll & 0& 88 & 32 \\
-    \hline
-    Hip pitch & 0& 88 & 32 \\
-    \hline
-    Hip yaw & 0& 88 & 32 \\
-    \hline
-    Ankle roll & 0& 40 & 53 \\
-    \hline
-    Ankle pitch & 0& 40 & 53 \\
-    \hline
-    Shoulder roll &0 & 21 & 53 \\
-    \hline
-    Shoulder pitch &0 & 21 & 53 \\
-    \hline
-    Shoulder yaw &0 & 21 & 53 \\
-    \hline
-    Elbow roll &0 & 21 & 53 \\
-    \hline
-    Elbow pitch &0 & 21 & 53 \\
-    \hline
-    Hand zero & 0& 0.7 & 23 \\
-    \hline
-    Hand one & 0& 0.7 & 23 \\
-    \hline
-    Hand two & 0& 0.7 & 23 \\
-    \hline
-    Hand three &0 & 0.7 & 23 \\
-    \hline
-    Hand four & 0& 0.7 & 23 \\
-    \hline
-    Hand five & 0& 0.7 & 23 \\
-    \hline
-    Hand six & 0& 0.7 & 23 \\
-    \hline
-  \end{tabular}
+\begin{table}[htbp]
+    \centering
+    \caption{Actuator Parameters of the Unitree G1 Robot Model}
+    \label{tab:g1_actuator_params}
+    \small % 表全体の文字サイズを少し小さくする
+    % X は幅に合わせて自動調整・折り返しを行う列指定子
+    \begin{tabularx}{\linewidth}{Xcccc}
+        \toprule
+        \textbf{Joint Name} & \textbf{Max Trq.} & \textbf{Max Vel.} & \textbf{Stiffness} & \textbf{Damping} \\
+         & [Nm] & [rad/s] & ($K_p$) & ($K_d$) \\
+        \midrule
+        Hip (Yaw, Roll) & 300.0 & 23.0 & 150.0 & 5.0 \\
+        Hip (Pitch), Knee, Torso & 300.0 & 23.0 & 200.0 & 5.0 \\
+        Ankle (Pitch, Roll) & 20.0 & 9.0 & 20.0 & 2.0 \\
+        Arms (Shoulder, Elbow, Wrist) & 300.0 & 23.0 & 40.0 & 10.0 \\
+        \bottomrule
+    \end{tabularx}
 \end{table}
 
-\section{学習におけるランダム要素}
+\begin{table}[htbp]
+    \centering
+    \caption{Actuator Parameters of the Unitree G1 Robot Model}
+    \label{tab:g1_actuator_params}
+    % \resizebox{幅}{高さ}{内容} -> 高さを!にすると比率維持
+    \resizebox{\linewidth}{!}{
+        \begin{tabular}{|l|c|c|c|c|}
+            \hline
+            \textbf{Joint Name} & \textbf{Max Torque} & \textbf{Max Velocity} & \textbf{Stiffness ($K_p$)} & \textbf{Damping ($K_d$)} \\
+             & [Nm] & [rad/s] & [Nm/rad] & [Nms/rad] \\
+            \hline
+            Hip (Yaw, Roll) & 300.0 & 23.0 & 150.0 & 5.0 \\
+            \hline
+            Hip (Pitch), Knee, Torso & 300.0 & 23.0 & 200.0 & 5.0 \\
+            \hline
+            Ankle (Pitch, Roll) & 20.0 & 9.0 & 20.0 & 2.0 \\
+            \hline
+            Arms (Shoulder, Elbow, Wrist) & 300.0 & 23.0 & 40.0 & 10.0 \\
+            \hline
+        \end{tabular}
+    }
+\end{table}
+
+\section{エージェントと環境モデル}
+本研究では，エージェントとしてNVIDIA Isaac Labにて標準提供されているUnitree G1のロボットモデルを使用する．
+また，実験を行う環境モデルについては，\ref{fig:Environments based on legged locomotion tasks}に示すように，平地環境と不整地環境があり，
+不整地環境はピラミッド上の階段，スロープ，凹凸の地面がある．
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}{0.48\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/png/g1_flat.png}
+    \caption{Track a velocity command on flat terrain with the Unitree G1}
+    \label{fig:velocityflat}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}{0.48\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/png/g1_rough.png}
+    \caption{Track a velocity command on rough terrain with the Unitree G1}
+    \label{fig:velocityrough}
+  \end{subfigure}
+  \caption{Environments based on legged locomotion tasks}
+  \label{fig:Environments based on legged locomotion tasks}
+\end{figure}
+
 
 
 \section{状態・行動空間}
-本学習モデルにおける観測空間（状態空間）および行動空間の定義は以下の通りである．
-
-\subsection{観測空間}
-\begin{itemize}
-\item ロボットの位置と線形速度あとで式を書く
-\item 目標となる線形速度と角速度
-\item 各関節の速度
-\item 各足の接触状態
-\item 周囲環境（不整地環境のみ）ロボットの足元の地形形状を把握するための地形の高さ情報
-\end{itemize}
 \subsection{行動空間}
+行動空間は，ロボットの各関節に対する目標角度司令で構成される連続空間である．制御周期ごとに，ポリシーネットワークから出力された行動
+は，初期姿勢からの相対的な変位として解釈され，スケール係数(0.5)が乗じられた後，デフォルトの関節角度に加算される．
+最終的なトルク司令は，Pゲイン(剛性)$K_{p}$およびDゲイン(減衰)$K_{d}$を用いたPD制御則により算出される．
+
+\begin{equation}
+  \tau = K_{p}(q_{target} - q) - K_{d}\dot{q}
+\end{equation}
+ここで，$q$および$\dot{q}$は現在の関節角度および角速度である．
+
+\subsection{状態空間}
+表を作る
+
+\section{学習におけるランダム要素}
+
 
 
 \section{報酬関数（報酬項）}
