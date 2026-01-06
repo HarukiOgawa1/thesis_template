@@ -114,49 +114,80 @@
 \section{学習におけるランダム要素}
 
 
+\section{報酬関数}
+本研究では，目標速度への追従を目的とした正の報酬と，エネルギー効率や安定性を阻害する動作に対する負の報酬の加重和として，以下の報酬$r_{t}$を定義した．
 
-\section{報酬関数（報酬項）}
-本研究では，NVIDIA Isaac Lab，locomotion（二足歩行ロボットが歩行動作＝タスク）を用いる．
-本研究における報酬関数は以下の通りである．\par
+\begin{equation}
+  r_{t} = \sum_{i}\omega_{i}\cdot r_{i,t}
+\end{equation}
+
+ここで，$\omega_{i}$は各報酬項の重み係数，$r_{i,t}$は時刻$t$における各報酬項の値を示す．
 
 \begin{itemize}
- \item $R_{termination\_penalty}$ : ロボットが転倒などの致命的な失敗によりエピソードを終了した場合に，学習がそのような状態を避けるよう促すためである．これは，エージェントに対してこの状態に陥ると大きな大きな不利益があることを学習させ，転倒を避ける動作を促す．
- \par
+  \item \textbf{Termination penalty}(終了ペナルティ)：エピソードが早期に終了した場合に与えられる大きな負の報酬である．これにより，エージェントは可能な限り転倒を避ける動作を促す．
+    \begin{equation}
+      r_{\text{term}} = \begin{cases}
+          -200.0 & \text{if terminated} \\
+          0 & \text{otherwise}
+      \end{cases}
+    \end{equation}
+  \item \textbf{Track Lin Vel XY}：ロボット座標系におけるXY平面の並進速度$v_{xy}$と目標速度$v_{cmd,xy}$の誤差に基づく．
+    \begin{equation}
+      r_{\text{lin\_vel}} = \exp \left( - \frac{\| \mathbf{v}_{\text{cmd}, xy} - \mathbf{v}_{xy} \|^2}{\sigma_{\text{lin}}^2} \right)
+    \end{equation}
+    ここで，$\sigma_{\text{lin}} = 0.5$である．
+  \item \textbf{Track Ang Vel Z}：ワールド座標系におけるZ軸周りの$\omega_{z}$と目標角速度$\omega_{cmd,z}$の誤差に基づく．
+    \begin{equation}
+      r_{\text{ang\_vel}} = \exp \left( - \frac{(\omega_{\text{cmd}, z} - \omega_z)^2}{\sigma_{\text{ang}}^2} \right)
+    \end{equation}
+    ここで，$\sigma_{\text{ang}} = 0.5$である．
+  \item \textbf{Feet Air Time}(遊脚時間報酬)：二足歩行ロボット特有の交互な足運びを学習するため，片足支持状態における遊脚時間を報酬として与える．
+    \begin{equation}
+      r_{\text{air\_time}} = \sum_{\text{foot}} \mathbb{I}_{\text{single\_stance}} \cdot \min(t_{\text{air, foot}}, \theta_{\text{threshold}})
+    \end{equation}
+    ここで，$t_air,foot$は各足が滞空している時間，$\theta_{\text{threshold}} = 0.4[s]$は上限閾値である．
+  \item \textbf{Lin Vel Z L2}：歩行中の上下動を抑制する．
+    \begin{equation}
+      r_{\text{lin\_vel\_z}} = - v_z^2
+    \end{equation}
+  \item \textbf{Action Rate L2}：急激な制御入力の変化を抑える．
+    \begin{equation}
+      r_{\text{action\_rate}} = - \| \mathbf{a}_t - \mathbf{a}_{t-1} \|^2
+    \end{equation}
+  \item \textbf{DOF Acc L2}：関節加速度$\ddot{\mathbf{q}}$の大きさを抑制する．
+    \begin{equation}
+      r_{\text{dof\_acc}} = - \| \ddot{\mathbf{q}} \|^2
+    \end{equation}
+    Hip, Kneeに対して適用される．
+  \item \textbf{DOF Torques L2}：関節トルク$\boldsymbol{\tau}$の大きさを抑制する．
+    \begin{equation}
+      r_{\text{dof\_torques}} = - \| \boldsymbol{\tau} \|^2
+    \end{equation}
+    Flat環境では，Hip，Knee，Rough環境ではHip，Knee，Ankleに対して適用される．
+  \item \textbf{Feet Slide}：接地している足の水平速度$v_{foot,xy}$に対するペナルティを与え，地面に滑ることを防ぐ．
+    \begin{equation}
+      r_{\text{slide}} = - \sum_{\text{foot}} \mathbb{I}_{\text{contact}} \cdot \| \mathbf{v}_{\text{foot}, xy} \|
+    \end{equation}
+  \item \textbf{Joint deviation(hip)}：特定の関節が，初期姿勢から大きく逸脱することを防ぎ，不自然な脚の開閉を抑制する．
+    \begin{equation}
+      r_{\text{joint\_dev}} = - \sum_{j \in \mathcal{J}_{\text{target}}} | q_j - q_{j}^{\text{default}} |
+    \end{equation}
+  \item \textbf{Flat orientation}：ロボットの体幹(Base Link)が地面に対して水平であることを促す．
+    \begin{equation}
+      r_{\text{flat\_orient}} = - \| \mathbf{g}^{\text{robot}}_{xy} \|^2
+    \end{equation}
+  \item \textbf{DOF Joint limits}(関節可動域ペナルティ)：各関節が可動域限界に近づきすぎることを防ぐ．
   \begin{equation}
-    r_{term} = w_{term} \cdot \mathbb{1}_{terminated}
+    r_{\text{limits}} = - \sum_{j} \left( \max(0, q_j - q_{j}^{\text{max}} + \epsilon) + \max(0, q_{j}^{\text{min}} - q_j + \epsilon) \right)
   \end{equation}
-% 指示関数の定義を含む詳細な記述例
-ここで，$w_{term} = -200.0$ はペナルティの重み係数であり，$\mathbb{1}_{terminated}$ はエピソードの異常終了を判定する指示関数である．本モデルにおいて，この項はロボットの胴体（torso\_link）が地面に接触した瞬間に適用され，エージェントに対して転倒を回避する強力なバイアスを与える役割を果たす．
-  
- \item $R_{track\_lin\_vel\_xy\_exp}$（XY線形速度追従） : エージェントのヨー軸（向いている方向）を基準としたXY平面での線形速度が，目標速度にどれくらい近いか評価し，誤差が小さいほど高い報酬を与える．誤差の評価には指数カーネル（共分散）が使用される．
- \par
- $r_{\text{track\_lin}} = \exp\left(-\frac{\|\mathbf{v}_{xy}^{\text{cmd}} - \mathbf{v}_{xy}^{\text{base\_yaw}}\|_2^2}{\sigma^2}\right)$
- \item $R_{track\_ang\_vel\_z\_exp}$（Z軸角速度追従） : エージェントの目標角速度にどれだけ近いかを評価する．
- \par
- $r_{\text{track\_ang}} = \exp\left(-\frac{(\omega_z^{\text{cmd}} - \omega_z^{\text{world}})^2}{\sigma^2}\right)$
-
- \item $R_{feet\_air\_time}$（足の滞空時間） : 足が地面から離れている時間（滞空時間）が一定の閾値（）を超えた場合に報酬を与える．これにより，足を地面に擦るのではなく，持ち上げて歩行する動作を促す．
- \par
- $r_{\text{air\_time}} = \max(0, \min(T_{\text{air}, L}, T_{\text{air}, R}) - T_{\text{thresh}})$
- \item $R_{feet\_slide}$（足の滑りペナルティ） : 足が地面に接地していると判定されている間に，その足がワールド座標系のXY方向に速度を持つ（＝滑っている）ことに対してペナルティを与える．
- \par
- $r_{\text{slide}} = \sum_{f \in \{\text{left, right}\}} \|\mathbf{v}_{xy}^{\text{foot}, f}\|_2 \cdot \mathbb{I}(F_{\text{contact}, f} > F_{\text{thresh}})$
- \item $R_{flat\_orientation\_l2}$（水平姿勢維持ペナルティ） : エージェントの胴体が水平から傾くことに対してペナルティを与える．
- \par
- $r_{\text{orientation}} = \| \mathbf{g}_{\text{proj}, xy}^{\text{base}} \|_2^2 = (g_x^{\text{base}})^2 + (g_y^{\text{base}})^2$
- \item $R_{dof\_pos\_limits}$（関節可動域ペナルティ） : 関節角度が設定された可動域の上限または下限に近づくことに対してペナルティを与える．
- \par
- \item $R_{joint\_deviation\_...}$（デフォルト姿勢からの逸脱ペナルティ） : 
- \par
- \item $R_{action\_rate\_l2}$ : 
- \par
- $r_{\text{action\_rate}} = \| \mathbf{a}_t - \mathbf{a}_{t-1} \|_2^2$
- \item $R_{dof\_acc\_l2}$ : 
- \par
- \item $R_{dof\_torques\_l2}$ : 
- \par
- $r_{\text{torque}} = \| \mathbf{\tau} \|_2^2 = \sum_{j \in \text{joints}} \tau_j^2$
+  Ankleに対して適用される．
 \end{itemize}
+
+また，$\mathbf{v}_{\text{cmd}, xy}$ は目標並進速度，$\mathbf{v}_{xy}$ は現在の並進速度，
+$\omega_{\text{cmd}, z}$ は目標旋回角速度，$\omega_z$ は現在の旋回角速度，
+$\sigma_{\text{lin}}, \sigma_{\text{ang}}$ はカーネル幅を表すスケーリングパラメータである．
+また，$\mathbf{a}_t$ は時刻 $t$ における行動（目標関節角度変位），
+$\ddot{\mathbf{q}}$ は関節角加速度，$\boldsymbol{\tau}$ は関節トルクを表す．
 
 % Flat環境の報酬関数パラメータ
 \begin{table}[htbp]
@@ -165,22 +196,27 @@
   \label{tab:g1_flat_reward_params}
   \small % 表全体の文字サイズを少し小さくする
   % X は幅に合わせて自動調整・折り返しを行う列指定子
-  \begin{tabularx}{\linewidth}{Xc}
+  \begin{tabularx}{\linewidth}{Xcc}
       \toprule
-      \textbf{Reward term} & \textbf{Weight} \\
+      \textbf{Reward term} & \textbf{Weight(Flat)} & \textbf{Weight(Rough)} \\
       \midrule
-      Tracking Lin Vel XY & 0.75 \\
-      Tracking Ang Vel Z & 0.75 \\
-      Feet Air Time & 0.75 \\
-      Lin Vel Z L2 & 0.75 \\
-      Action Rate L2 & 0.75 \\
-      DOF Acc L2 & 0.75 \\
-      DOF & 0.75 \\
-      Feet Air Time & 0.75 \\
-      Feet Air Time & 0.75 \\
-      Feet Air Time & 0.75 \\
+      Track Lin Vel XY    & $1.0$ & $1.0$ \\
+      Track Ang Vel Z     & $1.0$ & $2.0$\\
+      Feet Air Time       & $0.75$ & $0.25$\\
+      Lin Vel Z L2        & $-0.2$ & $0.0$\\
+      Action Rate L2      & $-0.005$ & $-0.005$\\
+      DOF Acc L2          & $-1.0 \times 10^{-7}$ & $-1.25 \times 10^{-7}$\\
+      DOF Torques L2      & $-2.0 \times 10^{-6}$  & $-1.5 \times 10^{-7}$\\
+      DOF Joint Limits          & $-1.0$ & $-1.0$ \\
+      Feet Slide          & $-0.1$ & $-0.1$ \\
+      Joint deviation(hip)     & $-0.1$ & $-0.1$ \\
+      Flat orientation    & $-1.0$ & $-1.0$ \\
+      Termination penalty & $-200$ & $-0.1$ \\
       \bottomrule
   \end{tabularx}
 \end{table}
+
+後でいらなかったら消す
+Flat環境では，Z軸方向の速度抑制（Lin Vel Z L2）やトルク抑制（DOF Torques L2）の重みが大きく設定されており，無駄な上下動や過度な力の発揮を抑えた，静的で安定した歩行の獲得を重視していることがわかる．一方，Rough環境では旋回速度追従（Track Ang Vel Z）の重みが強化されているほか，関節加速度やトルクに対するペナルティが緩和されており，外乱や不整地に対応するためのダイナミックな動作を許容する設計となっている．
 
 \newpage
