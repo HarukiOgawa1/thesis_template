@@ -1,0 +1,8 @@
+========================================
+METRICS REPORT (Measurement Phase Only)
+Meas. Dist:   10.0148 m
+Meas. Time:   11.70 s
+Total Energy: 2928.47 J
+Avg Power:    250.30 W
+CoT:          0.9246
+========================================

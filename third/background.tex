@@ -43,28 +43,6 @@
     \end{tabularx}
 \end{table}
 
-\begin{table}[htbp]
-    \centering
-    \caption{Actuator Parameters of the Unitree G1 Robot Model}
-    \label{tab:g1_actuator_params}
-    % \resizebox{幅}{高さ}{内容} -> 高さを!にすると比率維持
-    \resizebox{\linewidth}{!}{
-        \begin{tabular}{|l|c|c|c|c|}
-            \hline
-            \textbf{Joint Name} & \textbf{Max Torque} & \textbf{Max Velocity} & \textbf{Stiffness ($K_p$)} & \textbf{Damping ($K_d$)} \\
-             & [Nm] & [rad/s] & [Nm/rad] & [Nms/rad] \\
-            \hline
-            Hip (Yaw, Roll) & 300.0 & 23.0 & 150.0 & 5.0 \\
-            \hline
-            Hip (Pitch), Knee, Torso & 300.0 & 23.0 & 200.0 & 5.0 \\
-            \hline
-            Ankle (Pitch, Roll) & 20.0 & 9.0 & 20.0 & 2.0 \\
-            \hline
-            Arms (Shoulder, Elbow, Wrist) & 300.0 & 23.0 & 40.0 & 10.0 \\
-            \hline
-        \end{tabular}
-    }
-\end{table}
 
 初期姿勢においては，ロボットのベース（骨盤）の高さは0.74 [m]に設定されている．
 また，ロボットの初期の関節角度は，直立姿勢を基準に定義されており，\ref{fig:velocityflat}および\ref{fig:velocityrough}に示すように，Hip Pitch関節は-0.20 [rad]，Knee関節は0.42 [rad]，Ankle Pitch関節は-0.23 [rad]に設定されている．
