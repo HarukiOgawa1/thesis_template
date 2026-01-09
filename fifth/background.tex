@@ -1,8 +1,49 @@
 %!TEX root = ../thesis.tex
-本章では，付録にある評価指標を用いた実験結果をもとに，各報酬関数の影響分析を行う．
 
-\section{Flat環境}
+\section{歩行性能・速度追従に関する報酬の影響}
+本節は，Track Lin Vel XY，Feet Slideについて議論する．
+以下の図は，Track Lin Vel XYのパラメータを1.0および2.0とした際の速度追従率と左右の歩幅を示したものである．グラフを比較すると，パラメータの値が大きくなるにつれて目標速度への追従がより厳密となった．その影響により，歩行開始時に急激に1 m/sへ到達しようとした結果，ロボットの上半身が後方へ仰け反るような挙動が確認された．
 
-\section{Rough環境}
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_track_lin_vel_xy_exp/10/velocity_tracking.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_track_lin_vel_xy_exp/20/velocity_tracking.png}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_track_lin_vel_xy_exp/10/stride_length_analysis.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_track_lin_vel_xy_exp/20/stride_length_analysis.png}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.08]
+      {images/png/5track.png}
+ \caption{When G1 starts walking, its torso leans back}
+ \label{Fig:When G1 starts walking, its torso leans back}
+\end{figure}
+
+\section{歩容の形成と自然さに関する報酬の影響}
+本節は，Feet Air Time, Joint deviation (hip), Lin Vel Z L2について議論する．
+\section{動作安定性に関する報酬の影響}
+本節は，Flat orientation, DOF Joint Limitsについて議論する．
+\section{トルクと角速度のペナルティの影響}
+本節は，DOF Torques L2, DOF Acc L2について議論する．
+
+\section{Flat環境とRough環境の比較}
+
 
 \newpage

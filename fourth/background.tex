@@ -12,10 +12,10 @@
   \item Track Lin Vel XY    ：目標並進速度への追従 [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 5.0]
   \item Feet Air Time       ：遊脚時間の確保 [0.0, 0.1, 0.2, 0.4, 0.6, 0.8, 1.0]
   \item DOF Joint Limits    ：関節可動域制限の遵守 [0.0, -0.1, -0.2, -0.4, -0.6, -0.8, -1.0]
-  \item Joint deviation(hip)：股関節の初期位置からの逸脱抑制
+  \item Joint deviation(hip)：股関節の初期位置からの逸脱抑制 [0.0, -0.1, -0.25, -0.5, -0.75, -1.0]
   \item Lin Vel Z L2        ：重心上下動（Z軸速度）の抑制 [0.0, -0.1, -0.2, -0.4, -0.6, -0.8, -1.0]
-  \item DOF Acc L2          ：関節加速度の抑制 $[-1.0 \times 10^{-6}, -5.0 \times 10^{-6}, -1.0 \times 10^{-7}, -5.0 \times 10^{-7}, -1.0 \times 10^{-8}, -5.0 \times 10^{-8}, 0.0]$
-  \item DOF Torques L2      ：トルク消費の抑制 $[0.0, -2.0 \times 10^{-7}, -5.0 \times 10^{-7}, -1.0 \times 10^{-6}, -2.0 \times 10^{-6}, -5.0 \times 10^{-6}, -1.0 \times 10^{-5}]$
+  \item DOF Acc L2          ：関節加速度の抑制 $[0.0, -1.0 \times 10^{-5}, -1.0 \times 10^{-6}, -5.0 \times 10^{-6}, -1.0 \times 10^{-7},  -2.5 \times 10^{-7}, -5.0 \times 10^{-7},  -7.5 \times 10^{-7}, -1.0 \times 10^{-8}, -5.0 \times 10^{-8}]$
+  \item DOF Torques L2      ：関節トルクの抑制 $[0.0, -2.0 \times 10^{-7}, -5.0 \times 10^{-7}, -1.0 \times 10^{-6}, -2.0 \times 10^{-6}, -5.0 \times 10^{-6}, -1.0 \times 10^{-5}]$
   \item Feet Slide          ：接地時の滑り抑制 [0.0, -0.1, -0.2, -0.4, -0.6, -0.8, -1.0]
   \item Flat orientation    ：ベースリンクの水平維持 [0.0, -0.1, -0.2, -0.4, -0.6, -0.8, -1.0]
 \end{itemize}
@@ -47,6 +47,8 @@
 
     \item \textbf{総仕事量 (Total Mechanical Work)} \\
     評価区間（Flat環境: $10\,\mathrm{m}$，Rough環境: $8\,\mathrm{m}$）を走行するのに要した機械的仕事量の総和である．van Marum ら\cite{van2024revisiting}を参考に各関節の出力トルクと角速度の積の総和．
+
+    \item \textbf{各報酬項の推移}
 \end{itemize}
 
 \section{評価シナリオ}
@@ -62,8 +64,8 @@
     本評価実験では，これらの地形の中から，特に地形適応能力および歩行のロバスト性が顕著に現れる以下の2つの代表的な地形を選定して検証を行う．
 
     \begin{itemize}
-        \item \textbf{[階段]}： [地形Aの特徴を簡単に記述．例：高さXXmの連続的な段差]
-        \item \textbf{[凹凸の地面]}： [地形Bの特徴を簡単に記述．例：傾斜XX度の不規則な斜面]
+        \item \textbf{[階段]}：高さ0.1mの段差
+        \item \textbf{[凹凸地形]}：高さ-0.05m 〜 +0.05m
     \end{itemize}
 
     これらの不整地環境において，ロボットは地形の高さ情報（Height Scan）および脚の固有感覚（Proprioception）のみを観測情報として利用できるものとし，外力による外乱は加えない条件とする．
