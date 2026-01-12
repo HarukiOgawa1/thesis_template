@@ -1,24 +1,40 @@
 %!TEX root = ../thesis.tex
 \section{ニューラルネットワーク}
-ニューラルネットワークは，脳の神経回路網を模した数理モデルであり，多層構造を持つことで複雑な非線形関数を近似する能力を有する．入力層から出力層へ信号を伝播させ，誤差逆伝播法により結合重みを調整することで学習を行う．本研究では，強化学習における方策や価値関数の近似器として深層ニューラルネットワークを用い，高次元なセンサ情報から適切な制御入力を生成する非線形写像を構築する．
+ニューラルネットワーク（Neural Networks）は，脳の神経回路網を模倣した数理モデルである．入力層，中間層，出力層からなる多層構造を持ち，
+各層のニューロンが結合荷重（重み）を介して信号を伝播させることで，複雑な非線形関数を近似する能力を有する．
+学習は，出力と正解値との誤差を最小化するように，誤差逆伝播法を用いて重みを更新することで行われる．
 
 \begin{figure}[H]
   \centering
- \includegraphics[keepaspectratio, scale=0.8]
-      {images/RaspberryPiMouse.png}
- \caption{Example}
- \label{Fig:Example}
+ \includegraphics[keepaspectratio, scale=0.3]
+      {images/png/neural_networks.png}
+ \caption{Neural networks}
+ \label{Fig:neural_networks}
 \end{figure}
 
 \section{強化学習}
-強化学習は，エージェントが環境と相互作用しながら，試行錯誤を通じて累積報酬を最大化する行動方針を学習する枠組みである．マルコフ決定過程として定式化され，状態，行動，報酬により問題が定義される．教師データを与えられるのではなく，自らの行動結果として得られる報酬をフィードバックとして学習を進めるため，未知の環境や複雑なタスクに対しても適応的な制御則を獲得することが可能である．
+強化学習（Reinforcement Learning: RL）は，未知の環境下において，エージェントが試行錯誤を通じて最適な行動方策（Policy）を獲得する機械学習手法である．
+教師あり学習のように正解データが明示的に与えられるのではなく，エージェント自身の行動結果に対する報酬（Reward）を環境から受け取り，その利益を最大化するように学習が進む点が特徴である．
 \begin{figure}[H]
   \centering
- \includegraphics[keepaspectratio, scale=0.8]
-      {images/RaspberryPiMouse.png}
- \caption{Example}
- \label{Fig:Example}
+ \includegraphics[keepaspectratio, scale=0.6]
+      {images/png/reinforcement_learning.png}
+ \caption{Conceptual diagram of Reinforcement Learning}
+ \label{Fig:reinforcement_learning}
 \end{figure}
+Fig. \ref{Fig:reinforcement_learning}に強化学習におけるエージェントと環境の相互作用の概念図を示す．この枠組みにおいて，学習は離散時間におけるエージェントと環境の相互作用の繰り返しによって進行する．
+まず，時刻tにおいて，エージェントは環境の状態$s_{t}\in S$を観測する．次に，エージェントは自身の保持する方策$\pi(a_t \mid s_t)$に基づき，現在の状態$s_{t}$に応じた行動$a_{t}\in A$を決定し，環境に対して実行する．
+行動$a_{t}$が実行されると，環境は物理法則やタスクのルール（状態遷移確率$P(s_{t+1} \mid s_t, a_t)$）に從って次の状態$s_{t+1}$へと遷移する．この際，その行動および遷移の良し悪しを評価するスカラー値である報酬$r_{t}$が環境からエージェントへとフィードバックされる．
+エージェントはこの報酬を頼りに，より良い行動を選択できるように自身の方策を更新していく．
+この一連のプロセスは，一般にマルコフ決定過程（Markov Decision Process: MDP）として定式化され，状態集合$S$，行動集合$A$，遷移確率$P$報酬関数$R$，および割引率$\gamma$の5つ組で定義される．
+ここでエージェントの目的は，単に目の前の即時報酬$r_{t}$を最大化することではなく，将来にわたって得られる報酬の総和，すなわち割引累積報酬（収益）$G_{t}$の期待値を最大化することである．収益$G_{t}$​は，割引率$\gamma\in[0,1]$を用いて式\ref{eq:return}のように定義される．
+
+\begin{equation}
+  G_t = \sum_{k=0}^{\infty} \gamma^k r_{t+k} = r_t + \gamma r_{t+1} + \gamma^2 r_{t+2} + \dots
+  \label{eq:return}
+\end{equation}
+式\ref{eq:return}における割引率$\gamma$は，将来の報酬を現在の価値としてどれだけ割り引くかを決定するパラメータである．$\gamma$が0に近いほど近視眼的な評価となり，1に近いほど長期的な利益を重視することになる．
+強化学習アルゴリズムは，環境との相互作用データの蓄積を通じて，この収益$G_{t}$の期待値を最大化するような最適方策$\pi*$を探索するものである．
 
 \section{NVIDIA Isaac Lab}
 NVIDIA Isaac Lab\cite{mittal2025isaaclab}は，Omniverse上に構築されたロボット学習用シミュレーションフレームワークである．PhysXによる高精度な物理演算とGPUによる並列処理を組み合わせることで，数千体のロボットを同時にシミュレーション可能とする．これにより，深層強化学習に不可欠な膨大な試行回数を短時間で確保でき，現実世界では困難な大規模なデータ収集と効率的な学習を実現する．
