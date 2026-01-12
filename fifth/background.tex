@@ -1,7 +1,7 @@
 %!TEX root = ../thesis.tex
 
-\section{歩行性能・速度追従に関する報酬の影響}
-本節は，Track Lin Vel XY，Feet Slideについて議論する．
+\section{Track Lin Vel XYの影響}
+本節は，\textbf{Track Lin Vel XY}について議論する．
 以下の図は，Track Lin Vel XYのパラメータを1.0および2.0とした際の速度追従率と左右の歩幅を示したものである．グラフを比較すると，パラメータの値が大きくなるにつれて目標速度への追従がより厳密となった．その影響により，歩行開始時に急激に1 m/sへ到達しようとした結果，ロボットの上半身が後方へ仰け反るような挙動が確認された．
 
 \begin{figure}[H]
@@ -36,14 +36,111 @@
  \label{Fig:When G1 starts walking, its torso leans back}
 \end{figure}
 
-\section{Feetairtimeの影響}
+\section{Feet air timeの影響}
+本節は，\textbf{Feet air time}について議論する．
+以下の図は，Feet air timeのパラメータを0.0および0.1とした際の左足の関節トルクと歩行軌跡を示したものである．
+グラフを比較すると，パラメータの値が大きくなるにつれて歩行中の足の浮き時間が長くなり，よりダイナミックな歩行動作が実現されていることがわかる．
+
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_air_time/0/Left_Torques.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_air_time/01/Left_Torques.png}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_air_time/0/trajectory_side_view.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_air_time/01/trajectory_side_view.png}
+\end{minipage}
+\end{figure}
+
+
 \section{DOF Joint Limitsの影響}
-\section{oint deviation(hip)の影響}
+本節は，\textbf{DOF Joint Limits}について議論する．
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_pos_limits/0/foot_force_plot.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_pos_limits/06/foot_force_plot.png}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_pos_limits/10/foot_force_plot.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_pos_limits/0/Left_Torques.png}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_pos_limits/06/Left_Torques.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_pos_limits/10/Left_Torques.png}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_pos_limits/0/Left_Velocity.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_pos_limits/06/Left_Velocity.png}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.3]
+      {images/g1_flat_dof_pos_limits/10/Left_Velocity.png}
+\end{figure}
+
+\section{joint deviation(hip)の影響}
+本節は，\textbf{joint deviation(hip)}について議論する．
+
 \section{Lin Vel Z L2の影響}
+本節は，\textbf{Lin Vel Z L2}について議論する．
+
 \section{DOF Acc L2の影響}
+本節は，\textbf{DOF Acc L2}について議論する．
+
 \section{DOF Torques L2の影響}
+本節は，\textbf{DOF Torques L2}について議論する．
+
 \section{Feet Slideの影響}
+本節は，\textbf{Feet Slide}について議論する．
+
 \section{Flat orientationの影響}
+本節は，\textbf{Flat orientation}について議論する．
 
 \section{Flat環境とRough環境の比較}
 
