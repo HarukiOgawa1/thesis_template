@@ -1,8 +1,34 @@
 %!TEX root = ../thesis.tex
 
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.5]
+      {images/png/totalenergy_track.png}
+    \caption{Total Energy by Track lin vel xy exp and Feet Air Time parameters}
+    \label{fig:totalenergy_flat_track}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.5]
+      {images/png/totalenergy_5.png}
+      \caption{Total Energy by DOF Joint Limits and Joint deviation(hip), Lin Vel Z L2, Feet Slide, Flat orientation L2 parameters}
+    \label{fig:totalenergy_flat_5}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.5]
+      {images/png/totalenergy_dof.png}
+      \caption{Total Energy by DOF Acc L2 and DOF Torques parameters}
+    \label{fig:totalenergy_flat_dof}
+\end{figure}
+
 \section{Track Lin Vel XYの影響}
 本節は，\textbf{Track Lin Vel XY}について議論する．
-以下の図は，Track Lin Vel XYのパラメータを1.0および2.0とした際の速度追従率と左右の歩幅を示したものである．グラフを比較すると，パラメータの値が大きくなるにつれて目標速度への追従がより厳密となった．その影響により，歩行開始時に急激に1 m/sへ到達しようとした結果，ロボットの上半身が後方へ仰け反るような挙動が確認された．
+以下の図は，Track Lin Vel XYのパラメータを1.0および2.0とした際の速度追従率と左右の歩幅を示したものである．
+グラフを比較すると，パラメータの値が大きくなるにつれて目標速度への追従がより厳密となった．その影響により，歩行開始時に急激に$1 [m/s]$へ到達しようとした結果，ロボットの上半身が後方へ仰け反るような挙動が確認された．
+また，Fig. \ref{fig:totalenergy_flat_track}より，速度追従を厳守するほど総仕事量が増加する傾向を確認できた．
 
 \begin{figure}[H]
 \centering
@@ -38,10 +64,9 @@
 
 \section{Feet air timeの影響}
 本節は，\textbf{Feet air time}について議論する．
-以下の図は，Feet air timeのパラメータを0.0および0.1とした際の左足の関節トルクと歩行軌跡を示したものである．
-グラフを比較すると，パラメータの値が大きくなるにつれて歩行中の足の浮き時間が長くなり，よりダイナミックな歩行動作が実現されていることがわかる．
-
-
+以下の図は，Feet air timeのパラメータを0.0および1.0とした際の左足の関節トルク，角速度と歩行軌跡を示したものである．
+これらを比較すると，パラメータの値が大きくなるにつれて歩行周期が標準パラメータよりも遅くなり歩幅の距離が増えた．
+また，hip\_pitch\_jointとknee\_pitchの関節トルクと角速度がそれぞれ増加しているが，Fig. \ref{fig:totalenergy_flat_track}より，総仕事量に変化はない．
 \begin{figure}[H]
 \centering
 \begin{minipage}[b]{0.49\columnwidth}
@@ -50,7 +75,19 @@
 \end{minipage}
 \begin{minipage}[b]{0.49\columnwidth}
     \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_air_time/01/Left_Torques.png}
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_air_time/10/Left_Torques.png}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_air_time/0/Left_Velocity.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_air_time/10/Left_Velocity.png}
 \end{minipage}
 \end{figure}
 
@@ -62,13 +99,15 @@
 \end{minipage}
 \begin{minipage}[b]{0.49\columnwidth}
     \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_air_time/01/trajectory_side_view.png}
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_air_time/10/trajectory_side_view.png}
 \end{minipage}
 \end{figure}
 
 
 \section{DOF Joint Limitsの影響}
 本節は，\textbf{DOF Joint Limits}について議論する．
+以下の図は，DOF Joint Limits（関節可動域制限の遵守）のパラメータを0.0，0.6，1.0とした際の左足の関節トルク，角速度と歩行軌跡を示したものである．
+DOF Joint Limitsペナルティ値が増えるたびankle\_rollのトルクと角速度は減少したが，ankle\_pitchは変化はなかった．
 
 \begin{figure}[H]
 \centering
@@ -126,6 +165,30 @@
 
 \section{joint deviation(hip)の影響}
 本節は，\textbf{joint deviation(hip)}について議論する．
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_joint_deviation_hip/0/Left_Velocity.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_joint_deviation_hip/10/Left_Velocity.png}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_joint_deviation_hip/0/stride_length_analysis.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_joint_deviation_hip/10/stride_length_analysis.png}
+\end{minipage}
+\end{figure}
+
 
 \section{Lin Vel Z L2の影響}
 本節は，\textbf{Lin Vel Z L2}について議論する．
