@@ -165,6 +165,7 @@ DOF Joint Limitsペナルティ値が増えるたびankle\_rollのトルクと�
 
 \section{joint deviation(hip)の影響}
 本節は，\textbf{joint deviation(hip)}について議論する．
+
 \begin{figure}[H]
 \centering
 \begin{minipage}[b]{0.49\columnwidth}
@@ -192,20 +193,88 @@ DOF Joint Limitsペナルティ値が増えるたびankle\_rollのトルクと�
 
 \section{Lin Vel Z L2の影響}
 本節は，\textbf{Lin Vel Z L2}について議論する．
+以下の図は，Lin Vel Z L2（重心上下動の抑制）のパラメータを0.0，-0.6，-1.0とした際の重心位置と足上げ高さを示したものである．
+評価指標の違いではあまり変化が見られなかったが，Fig. \ref{fig:totalenergy_flat_5}より，Lin Vel Z L2ペナルティ値が増えるたび重心位置の上下移動が抑えれていることを確認できた．
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_lin_vel_z_l2/0/trajectory_side_view.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_lin_vel_z_l2/10/trajectory_side_view.png}
+\end{minipage}
+\end{figure}
 
 \section{DOF Acc L2の影響}
 本節は，\textbf{DOF Acc L2}について議論する．
+以下の図は，DOF Acc L2（関節加速度の抑制）のパラメータを0.0，$-5.0 \times 10^{-6}$，$-5.0 \times 10^{-7}$とした際の左足の関節トルクを示したものである．
+
+$-5.0 \times 10^{-5}$ではロボットは過剰にペナルティを避けようとし，動かなくなった
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_acc_l2/257/Left_Torques.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_acc_l2/257/Left_Velocity.png}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_acc_l2/57/Left_Torques.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_acc_l2/57/Left_Velocity.png}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_acc_l2/56/Left_Torques.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_acc_l2/56/Left_Velocity.png}
+\end{minipage}
+\end{figure}
 
 \section{DOF Torques L2の影響}
 本節は，\textbf{DOF Torques L2}について議論する．
+以下の図は，DOF Torques L2（関節トルクの抑制）のパラメータを0.0，$-1.0 \times 10^{-5}$，$-1.0 \times 10^{-6}$とした際の左足の関節トルク，角速度を示したものである．
+\ref{fig:totalenergy_flat_dof}
+$-2.0 \times 10^{-5}$ではロボットに過剰なペナルティを与えたことで学習が破綻した．
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_torques_l2/15/Left_Torques.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_torques_l2/15/Left_Velocity.png}
+\end{minipage}
+\end{figure}
 
 \section{Feet Slideの影響}
 本節は，\textbf{Feet Slide}について議論する．
+\ref{fig:totalenergy_flat_5}
+
 
 \section{Flat orientationの影響}
 本節は，\textbf{Flat orientation}について議論する．
-
-\section{Flat環境とRough環境の比較}
-
+\ref{fig:totalenergy_flat_5}
 
 \newpage
