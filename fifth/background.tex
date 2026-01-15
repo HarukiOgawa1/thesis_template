@@ -1,5 +1,5 @@
 %!TEX root = ../thesis.tex
-
+以下の図は，各報酬項のパラメータごとの総仕事量のグラフである．
 \begin{figure}[H]
   \centering
  \includegraphics[keepaspectratio, scale=0.5]
@@ -65,7 +65,7 @@
 \section{Feet air timeの影響}
 本節は，\textbf{Feet air time}について議論する．
 以下の図は，Feet air timeのパラメータを0.0および1.0とした際の左足の関節トルク，角速度と歩行軌跡を示したものである．
-これらを比較すると，パラメータの値が大きくなるにつれて歩行周期が標準パラメータよりも遅くなり歩幅の距離が増えた．
+これらを比較すると，パラメータの値が大きくなるにつれて歩行周期が標準パラメータよりも遅くなり歩幅の距離が増えた．1.0の場合は左右の遊脚時で歩行の位相が対称ではなくなっていることがわかった．
 また，hip\_pitch\_jointとknee\_pitchの関節トルクと角速度がそれぞれ増加しているが，Fig. \ref{fig:totalenergy_flat_track}より，総仕事量に変化はない．
 \begin{figure}[H]
 \centering
@@ -103,11 +103,12 @@
 \end{minipage}
 \end{figure}
 
-
 \section{DOF Joint Limitsの影響}
-本節は，\textbf{DOF Joint Limits}について議論する．
-以下の図は，DOF Joint Limits（関節可動域制限の遵守）のパラメータを0.0，0.6，1.0とした際の左足の関節トルク，角速度と歩行軌跡を示したものである．
-DOF Joint Limitsペナルティ値が増えるたびankle\_rollのトルクと角速度は減少したが，ankle\_pitchは変化はなかった．
+本節では，\textbf{DOF Joint Limits}（関節可動域制限に対するペナルティ）の影響について議論する．
+以下の図（Fig. \ref{fig:dof_limits}）は，DOF Joint Limitsのパラメータを $0.0$，$-0.6$，$-1.0$ と設定した際の，左足の関節トルク，角速度，および床反力を示したものである．
+グラフより，ペナルティの重みが増加するにつれて実質的な可動域が制限されたため，ankle\_roll のトルクと角速度は減少した．
+一方で，ankle\_pitch に関しては顕著な変化は見られなかった．
+また床反力の推移を確認すると，ペナルティが増加するほど着地時のピーク波形が変化し，徐々に先鋭化している（衝撃が鋭くなっている）傾向が確認された．
 
 \begin{figure}[H]
 \centering
@@ -163,9 +164,12 @@ DOF Joint Limitsペナルティ値が増えるたびankle\_rollのトルクと�
       {images/g1_flat_dof_pos_limits/10/Left_Velocity.png}
 \end{figure}
 
-\section{joint deviation(hip)の影響}
-本節は，\textbf{joint deviation(hip)}について議論する．
-
+\section{Joint Deviation (Hip) の影響}
+本節では，\textbf{Joint Deviation (Hip)}（股関節の初期位置からの逸脱に対するペナルティ）について議論する．
+以下の図は，Joint Deviation (Hip) のパラメータを $0.0$，$ -1.0$ と設定した際の，左足の関節角速度および歩幅を示したものである．
+グラフより，ペナルティ（重み）の増加に伴い hip\_joint の動きが抑制され，主として knee（膝）や ankle（足首）の関節を利用して歩行する傾向が見られた．
+その結果，歩行周期が短縮され（ハイピッチになり），歩幅の小さい小刻みな歩行動作が確認された．
+-1.0の歩行の様子を貼る
 \begin{figure}[H]
 \centering
 \begin{minipage}[b]{0.49\columnwidth}
@@ -192,9 +196,9 @@ DOF Joint Limitsペナルティ値が増えるたびankle\_rollのトルクと�
 
 
 \section{Lin Vel Z L2の影響}
-本節は，\textbf{Lin Vel Z L2}について議論する．
-以下の図は，Lin Vel Z L2（重心上下動の抑制）のパラメータを0.0，-0.6，-1.0とした際の重心位置と足上げ高さを示したものである．
-評価指標の違いではあまり変化が見られなかったが，Fig. \ref{fig:totalenergy_flat_5}より，Lin Vel Z L2ペナルティ値が増えるたび重心位置の上下移動が抑えれていることを確認できた．
+本節では，\textbf{Lin Vel Z L2}（重心鉛直速度に対するペナルティ項）について議論する．以下の図は，Lin Vel Z L2のパラメータ（重み係数）を 0.0 および −1.0 と設定した際の，重心位置と足上げ高さの推移を示したものである．
+本実験の評価指標全体においては顕著な変化は見られなかったが，Fig. \ref{fig:totalenergy_flat_5} を参照すると，ペナルティ項の導入により重心位置の上下動が抑制されていることが確認できる．
+これは，歩行動作に必然的に伴う重心の上下動に対して，ペナルティが過度な動きを制限するように作用したためであると考えられる．
 
 \begin{figure}[H]
 \centering
@@ -209,10 +213,23 @@ DOF Joint Limitsペナルティ値が増えるたびankle\_rollのトルクと�
 \end{figure}
 
 \section{DOF Acc L2の影響}
-本節は，\textbf{DOF Acc L2}について議論する．
-以下の図は，DOF Acc L2（関節加速度の抑制）のパラメータを0.0，$-5.0 \times 10^{-6}$，$-5.0 \times 10^{-7}$とした際の左足の関節トルクを示したものである．
+本節では，\textbf{DOF Acc L2}（関節加速度に対するペナルティ項）について議論する．以下の図は，DOF Acc L2のパラメータを 0.0，$ -5.0 \times 10^{-7}，-5.0 \times 10^{-6}$と設定した際の，左足の関節トルクおよび角速度を示したものである．
+グラフより，ペナルティの重みが増加するにつれて，hip\_pitchとknee\_pitch の角速度が抑制されていることがわかる．また Fig. \ref{fig:totalenergy_flat_dof} より，ペナルティが増えるほど歩行時の総仕事量は減少した．
+ただし，$-5.0 \times 10^{-6}$の設定では直進性が損なわれ，途中で大きく湾曲する挙動が見られた．なお，さらに値を大きくした$-5.0 \times 10^{-5}$では，過度な制約によりロボットは動作しなくなった．
+$-5.0 \times 10^{-6}$の歩行の様子をはる
 
-$-5.0 \times 10^{-5}$ではロボットは過剰にペナルティを避けようとし，動かなくなった
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_acc_l2/0/Left_Torques.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_acc_l2/0/Left_Velocity.png}
+\end{minipage}
+\end{figure}
 
 \begin{figure}[H]
 \centering
@@ -250,11 +267,34 @@ $-5.0 \times 10^{-5}$ではロボットは過剰にペナルティを避けよ�
 \end{minipage}
 \end{figure}
 
-\section{DOF Torques L2の影響}
-本節は，\textbf{DOF Torques L2}について議論する．
-以下の図は，DOF Torques L2（関節トルクの抑制）のパラメータを0.0，$-1.0 \times 10^{-5}$，$-1.0 \times 10^{-6}$とした際の左足の関節トルク，角速度を示したものである．
-\ref{fig:totalenergy_flat_dof}
-$-2.0 \times 10^{-5}$ではロボットに過剰なペナルティを与えたことで学習が破綻した．
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_acc_l2/56/footprint_2d.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_acc_l2/57/footprint_2d.png}
+\end{minipage}
+\end{figure}
+
+
+\section{DOF Torques L2の影響} 本節では，\textbf{DOF Torques L2}（関節トルクに対するペナルティ項）について議論する． 以下の図は，DOF Torques L2のパラメータを 0.0，$ -1.0 \times 10^{-6}， -1.0 \times 10^{-5}$ と設定した際の，左足の関節トルクおよび角速度，歩幅を示したものである．
+グラフをより，ペナルティの重みが増加するにつれて関節トルクはわずかに抑制されているものの，DOF Acc L2の場合と比較するとその変化は小さい．一方，Fig. \ref{fig:totalenergy_flat_dof} より，（総仕事量は）DOF Acc L2と同様に減少傾向にあることが確認できる．
+また，DOF Torques L2のペナルティが大きくなるほど，歩行周期が遅くなり，歩数が減少する傾向が見られた．ただし，$-2.0 \times 10^{-5}$のように過剰なペナルティを与えると，学習が破綻してしまう現象も確認された．
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_torques_l2/0/Left_Torques.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_torques_l2/0/Left_Velocity.png}
+\end{minipage}
+\end{figure}
 
 \begin{figure}[H]
 \centering
@@ -268,13 +308,119 @@ $-2.0 \times 10^{-5}$ではロボットに過剰なペナルティを与えた�
 \end{minipage}
 \end{figure}
 
-\section{Feet Slideの影響}
-本節は，\textbf{Feet Slide}について議論する．
-\ref{fig:totalenergy_flat_5}
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_torques_l2/16/Left_Torques.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_torques_l2/16/Left_Velocity.png}
+\end{minipage}
+\end{figure}
 
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_torques_l2/15/stride_length_analysis.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_torques_l2/16/stride_length_analysis.png}
+\end{minipage}
+\end{figure}
+
+\section{Feet Slideの影響} 本節では，\textbf{Feet Slide}（接地時の滑り抑制）について議論する．以下の図は，Feet Slideのパラメータを0.0，-0.8，-1.0と設定した際の，左足の関節トルク，角速度，および床反力を示したものである．
+グラフより，ペナルティの重みが増加するにつれて，knee\_pitch の関節トルクと角速度，および hip\_yaw の角速度に増加傾向が見られる．また歩容に関しては，ペナルティが大きくなるほど地面を強く叩きつけるような挙動（着地衝撃の増加）が確認された．
+Fig. \ref{fig:totalenergy_flat_5} より，ペナルティ係数が-0.8および-1.0の設定では，総仕事量が増加していることがわかる．
+
+わかりやすい動画をはる
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_slide/0/Left_Torques.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_slide/0/Left_Velocity.png}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_slide/06/Left_Torques.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_slide/06/Left_Velocity.png}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_slide/10/Left_Torques.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_slide/10/Left_Velocity.png}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_slide/06/foot_force_plot.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_slide/10/foot_force_plot.png}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.3]
+      {images/g1_flat_feet_slide/10/trajectory_side_view.png}
+\end{figure}
 
 \section{Flat orientationの影響}
-本節は，\textbf{Flat orientation}について議論する．
-\ref{fig:totalenergy_flat_5}
+本節は，\textbf{Flat orientation}について議論する．以下の図は，Feet Slideのパラメータを0.0と設定した際の，左足の関節トルク，角速度，胴体の姿勢偏差を示したものである．
+グラフより，ペナルティが 0.0（無効）の場合，ロボットは胴体を大きく後傾させて（上へ反らせて）歩行しており，その姿勢を維持するためにhip\_roll のトルクが増加したことがわかる．
+実際にペナルティなしで歩行した際の様子を Fig. （様子の画像を貼る）に示す．一方，ペナルティの重みが増加した場合は，胴体の姿勢偏差が低減されていることが確認できる．
+
+0の写真をはる
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_flat_orientation_l2/0/Left_Torques.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_flat_orientation_l2/0/Left_Velocity.png}
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_flat_orientation_l2/0/stability_analysis.png}
+\end{minipage}
+\begin{minipage}[b]{0.49\columnwidth}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_flat_orientation_l2/10/stability_analysis.png}
+\end{minipage}
+\end{figure}
 
 \newpage

@@ -9,20 +9,32 @@
 \end{center}
 \vspace{1.0zh}
 %
+近年，ヒューマノイドロボットの制御手法として深層強化学習が急速に発展し，複雑な環境への適応が期待されている．
+しかし，学習の成否を決定づける報酬関数の設計は，設計者の経験則や膨大な試行錯誤に依存しており，個々の報酬項が
+具体的な歩行動作や物理量に与える因果関係は明確化されていない．本研究では，この課題に対し，報酬関数の各項がロボットの
+歩行性能および動作生成に及ぼす影響を複数の定量的な評価指標を用いて分析することを目的とする．実験にはNVIDIA Isaac Lab上のUnitree G1モデル
+を用い，ベースラインとなる報酬関数から，目標速度追従，遊脚時間，関節トルク抑制といった報酬項の重みを個別に変化させ，その挙動を解析した．
+評価指標には，歩行速度の追従性，胴体の姿勢偏差，移動に伴う総仕事量などを用いた．実験の結果，速度追従報酬の増加は追従性を向上させる一方で，
+エネルギー消費の増大や歩行開始時に上体の後傾を招くことがわかった．また，遊脚時間報酬は歩幅や歩行周期に直接的に作用し，関節トルクや角速度への過度なペナルティは動作の凍結や学習の破綻を引き起こす要因となることを確認した．
+本研究は，各報酬項間に存在するトレードオフ関係を定量的に示し，報酬関数の構成がロボットの歩行動作および性能に及ぼす影響を分析した．
 
-
-キーワード: 
+キーワード: 深層強化学習，ヒューマノイドロボット，報酬関数
 %
 \newpage
 %%
-\chapter*{abstract}
+\chapter*{概要}
 \thispagestyle{empty}
 %
+
 \begin{center}
-  \scalebox{1.3}{title}
+  Analysis of the effects of reward functions on the walking\\
+  behavior of a humanoid robot using deep reinforcement learning
 \end{center}
+
 \vspace{1.0zh}
 %
+Deep Reinforcement Learning (DRL) has rapidly evolved as a control strategy for humanoid robots, showing great promise for adaptation to complex environments. However, designing the reward function—a critical factor determining learning success—often relies heavily on heuristics and extensive trial-and-error. Consequently, the causal relationships between individual reward terms and specific physical quantities or locomotion behaviors remain unclear.
+This study analyzes the impact of individual reward terms on walking performance and motion generation using multiple quantitative evaluation metrics. Experiments were conducted using the Unitree G1 model within the NVIDIA Isaac Lab environment. We analyzed the robot's behavior by individually varying the weights of specific reward terms—including target velocity tracking, swing time, and joint torque penalties—relative to a baseline. Evaluation metrics included velocity tracking accuracy, torso orientation deviation, and total mechanical work.
+Results indicated that increasing the velocity tracking reward improved tracking performance but led to higher energy consumption and a backward torso tilt during gait initiation. Furthermore, the swing time reward directly influences step length and gait cycle, whereas excessive penalties on joint torques can cause motion freezing or learning failure. This study quantitatively demonstrates the trade-offs between reward terms and analyzes their impact on humanoid locomotion.
 
-
-keywords: 
+keywords: deep reinforcement learning, humanoid robot, reward function

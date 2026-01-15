@@ -24,12 +24,23 @@
 \end{table}
 
 
-\begin{table}[htbp]
+\section{エージェントと環境モデル}
+本研究では，エージェントとしてNVIDIA Isaac Labにて標準提供されているUnitree G1のロボットモデルを使用する．
+また，実験を行う環境モデルについては，\ref{fig:velocityflat}に示す平地環境を用いる．
+初期姿勢においては，ロボットのベース（骨盤）の高さは0.74 [m]に設定されている．ロボットの初期の関節角度は，直立姿勢を基準に定義されており，\ref{fig:velocityflat}および\ref{fig:velocityrough}に示すように，Hip Pitch関節は-0.20 [rad]，Knee関節は0.42 [rad]，Ankle Pitch関節は-0.23 [rad]に設定されている．
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1.0\columnwidth]{images/png/g1_flat.png}
+  \caption{Track a velocity command on flat terrain with the Unitree G1}
+    \label{fig:velocityflat}
+\end{figure}
+
+\begin{table}[H]
     \centering
     \caption{Actuator Parameters of the Unitree G1 Robot Model}
     \label{tab:g1_actuator_params}
-    \small % 表全体の文字サイズを少し小さくする
-    % X は幅に合わせて自動調整・折り返しを行う列指定子
+    \small
     \begin{tabularx}{\linewidth}{Xcccc}
         \toprule
         \textbf{Joint Name} & \textbf{Max Trq.} & \textbf{Max Vel.} & \textbf{Stiffness} & \textbf{Damping} \\
@@ -42,36 +53,6 @@
         \bottomrule
     \end{tabularx}
 \end{table}
-
-
-初期姿勢においては，ロボットのベース（骨盤）の高さは0.74 [m]に設定されている．
-また，ロボットの初期の関節角度は，直立姿勢を基準に定義されており，\ref{fig:velocityflat}および\ref{fig:velocityrough}に示すように，Hip Pitch関節は-0.20 [rad]，Knee関節は0.42 [rad]，Ankle Pitch関節は-0.23 [rad]に設定されている．
-
-\section{エージェントと環境モデル}
-本研究では，エージェントとしてNVIDIA Isaac Labにて標準提供されているUnitree G1のロボットモデルを使用する．
-また，実験を行う環境モデルについては，\ref{fig:Environments based on legged locomotion tasks}に示すように，平地環境と不整地環境があり，
-不整地環境はピラミッド上の階段，スロープ，凹凸の地面がある．
-
-\begin{figure}[H]
-  \centering
-  \begin{subfigure}{0.48\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/png/g1_flat.png}
-    \caption{Track a velocity command on flat terrain with the Unitree G1}
-    \label{fig:velocityflat}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}{0.48\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/png/g1_rough.png}
-    \caption{Track a velocity command on rough terrain with the Unitree G1}
-    \label{fig:velocityrough}
-  \end{subfigure}
-  \caption{Environments based on legged locomotion tasks}
-  \label{fig:Environments based on legged locomotion tasks}
-\end{figure}
-
-
 
 \section{状態・行動空間}
 
@@ -98,13 +79,12 @@
 
 \begin{itemize}
     \item \textbf{初期状態のランダム化:} エピソード開始時において，ロボットのベース位置，向き，および関節角度にノイズを加えることで，特定の初期状態への過学習を防ぐ．
-    \item \textbf{外乱の付与 (Push Robots):} 学習中，ロボットのベースリンクに対してランダムなタイミングと大きさで外力を加える．これにより，外部からの衝撃に対する復帰能力を強化する．
     \item \textbf{物理パラメータの摂動:} リンクの質量や重心位置，地面との摩擦係数などを一定の範囲内でランダムに変動させ，物理モデルの不確かさに対する頑健性を向上させる．
 \end{itemize}
 
 
 \section{報酬関数}
-本研究では，目標速度への追従を目的とした正の報酬と，エネルギー効率や安定性を阻害する動作に対する負の報酬の加重和として，以下の報酬$r_{t}$を定義した．
+本研究では，目標速度への追従を目的とした正の報酬と，エネルギー効率や安定性を阻害する動作に対する負の報酬の加重和として，以下の報酬$r_{t}$が定義されている．
 
 \begin{equation}
   r_{t} = \sum_{i}\omega_{i}\cdot r_{i,t}
@@ -124,12 +104,13 @@
     \begin{equation}
       r_{\text{lin\_vel}} = \exp \left( - \frac{\| \mathbf{v}_{\text{cmd}, xy} - \mathbf{v}_{xy} \|^2}{\sigma_{\text{lin}}^2} \right)
     \end{equation}
-    ここで，$\sigma_{\text{lin}} = 0.5$である．
+    ここで，$\sigma_{\text{lin}}$はカーネル幅を決定するスケーリングパラメータである．このパラメータは，目標値との誤差に対する報酬の減衰率を制御する役割を持つ．$\sigma$が小さいほど関数は鋭くなり，わずかな誤差でも報酬が大きく減少するため，より厳密な追従が要求される．逆に$\sigma$が大きいほど関数は緩やかになり，ある程度の誤差が許容されるようになる
+    ．本実験では，初期学習の安定性と最終的な追従精度のバランスを考慮し，$\sigma_{\text{lin}} = 0.5$に設定されている．
   \item \textbf{Track Ang Vel Z}：ワールド座標系におけるZ軸周りの$\omega_{z}$と目標角速度$\omega_{cmd,z}$の誤差に基づく．
     \begin{equation}
       r_{\text{ang\_vel}} = \exp \left( - \frac{(\omega_{\text{cmd}, z} - \omega_z)^2}{\sigma_{\text{ang}}^2} \right)
     \end{equation}
-    ここで，$\sigma_{\text{ang}} = 0.5$である．
+    ここで，$\sigma_{\text{ang}}$も同様に報酬の感度を調整するスケーリングパラメータであり，本実験では$\sigma_{\text{ang}} = 0.5$を用いた．
   \item \textbf{Feet Air Time}(遊脚時間報酬)：二足歩行ロボット特有の交互な足運びを学習するため，片足支持状態における遊脚時間を報酬として与える．
     \begin{equation}
       r_{\text{air\_time}} = \sum_{\text{foot}} \mathbb{I}_{\text{single\_stance}} \cdot \min(t_{\text{air, foot}}, \theta_{\text{threshold}})
@@ -173,8 +154,7 @@
 \end{itemize}
 
 また，$\mathbf{v}_{\text{cmd}, xy}$ は目標並進速度，$\mathbf{v}_{xy}$ は現在の並進速度，
-$\omega_{\text{cmd}, z}$ は目標旋回角速度，$\omega_z$ は現在の旋回角速度，
-$\sigma_{\text{lin}}, \sigma_{\text{ang}}$ はカーネル幅を表すスケーリングパラメータである．
+$\omega_{\text{cmd}, z}$ は目標旋回角速度，$\omega_z$ は現在の旋回角速度である．
 また，$\mathbf{a}_t$ は時刻 $t$ における行動（目標関節角度変位），
 $\ddot{\mathbf{q}}$ は関節角加速度，$\boldsymbol{\tau}$ は関節トルクを表す．
 
@@ -185,22 +165,22 @@ $\ddot{\mathbf{q}}$ は関節角加速度，$\boldsymbol{\tau}$ は関節トル�
   \label{tab:g1_flat_reward_params}
   \small % 表全体の文字サイズを少し小さくする
   % X は幅に合わせて自動調整・折り返しを行う列指定子
-  \begin{tabularx}{\linewidth}{Xcc}
+  \begin{tabularx}{\linewidth}{Xc}
       \toprule
-      \textbf{Reward term} & \textbf{Weight(Flat)} & \textbf{Weight(Rough)} \\
+      \textbf{Reward term} & \textbf{Weight} \\
       \midrule
-      Track Lin Vel XY    & $1.0$ & $1.0$ \\
-      Track Ang Vel Z     & $1.0$ & $2.0$\\
-      Feet Air Time       & $0.75$ & $0.25$\\
-      Lin Vel Z L2        & $-0.2$ & $0.0$\\
-      Action Rate L2      & $-0.005$ & $-0.005$\\
-      DOF Acc L2          & $-1.0 \times 10^{-7}$ & $-1.25 \times 10^{-7}$\\
-      DOF Torques L2      & $-2.0 \times 10^{-6}$  & $-1.5 \times 10^{-7}$\\
-      DOF Joint Limits          & $-1.0$ & $-1.0$ \\
-      Feet Slide          & $-0.1$ & $-0.1$ \\
-      Joint deviation(hip)     & $-0.1$ & $-0.1$ \\
-      Flat orientation    & $-1.0$ & $-1.0$ \\
-      Termination penalty & $-200$ & $-0.1$ \\
+      Track Lin Vel XY    & $1.0$ \\
+      Track Ang Vel Z     & $1.0$ \\
+      Feet Air Time       & $0.75$ \\
+      Lin Vel Z L2        & $-0.2$ \\
+      Action Rate L2      & $-0.005$ \\
+      DOF Acc L2          & $-1.0 \times 10^{-7}$ \\
+      DOF Torques L2      & $-2.0 \times 10^{-6}$ \\
+      DOF Joint Limits          & $-1.0$ \\
+      Feet Slide          & $-0.1$ \\
+      Joint deviation(hip)     & $-0.1$ \\
+      Flat orientation    & $-1.0$ \\
+      Termination penalty & $-200$ \\
       \bottomrule
   \end{tabularx}
 \end{table}
