@@ -8,8 +8,8 @@
   \centering
  \includegraphics[keepaspectratio, scale=0.3]
       {images/png/neural_networks.png}
- \caption{Neural networks}
- \label{Fig:neural_networks}
+ \caption{Neural network}
+ \label{Fig:neural_network}
 \end{figure}
 
 \section{強化学習}
@@ -19,7 +19,7 @@
   \centering
  \includegraphics[keepaspectratio, scale=0.6]
       {images/png/reinforcement_learning.png}
- \caption{Conceptual diagram of Reinforcement Learning}
+ \caption{Conceptual diagram of reinforcement learning}
  \label{Fig:reinforcement_learning}
 \end{figure}
 Fig. \ref{Fig:reinforcement_learning}に強化学習におけるエージェントと環境の相互作用の概念図を示す．この枠組みにおいて，学習は離散時間におけるエージェントと環境の相互作用の繰り返しによって進行する．
@@ -27,7 +27,7 @@ Fig. \ref{Fig:reinforcement_learning}に強化学習におけるエージェン�
 行動$a_{t}$が実行されると，環境は物理法則やタスクのルール（状態遷移確率$P(s_{t+1} \mid s_t, a_t)$）に從って次の状態$s_{t+1}$へと遷移する．この際，その行動および遷移の良し悪しを評価するスカラー値である報酬$r_{t}$が環境からエージェントへとフィードバックされる．
 エージェントはこの報酬を頼りに，より良い行動を選択できるように自身の方策を更新していく．
 この一連のプロセスは，一般にマルコフ決定過程（Markov Decision Process: MDP）として定式化され，状態集合$S$，行動集合$A$，遷移確率$P$報酬関数$R$，および割引率$\gamma$の5つ組で定義される．
-ここでエージェントの目的は，単に目の前の即時報酬$r_{t}$を最大化することではなく，将来にわたって得られる報酬の総和，すなわち割引累積報酬（収益）$G_{t}$の期待値を最大化することである．収益 $G_{t}$​は，割引率$\gamma\in[0,1]$を用いて式\ref{eq:return}のように定義される．
+ここでエージェントの目的は，単に目の前の即時報酬$r_{t}$を最大化することではなく，将来にわたって得られる報酬の総和，すなわち割引累積報酬（収益）$G_{t}$の期待値を最大化することである．収益$G_{t}$は，割引率$\gamma\in[0,1]$を用いて式\ref{eq:return}のように定義される．
 
 \begin{equation}
   G_t = \sum_{k=0}^{\infty} \gamma^k r_{t+k} = r_t + \gamma r_{t+1} + \gamma^2 r_{t+2} + \dots
@@ -42,7 +42,7 @@ NVIDIA Isaac Lab\cite{mittal2025isaaclab}は，Omniverse上に構築されたロ
   \centering
  \includegraphics[keepaspectratio, scale=0.15]
       {images/png/how-nvidia-isaac-lab-works.png}
- \caption{How NVIDIA Isaac Lab Works}
+ \caption{How nvidia isaac lab works}
  \label{Fig:nvidia-isaac-lab}
 \end{figure}
 \section{深層強化学習による歩行制御}
@@ -51,7 +51,7 @@ NVIDIA Isaac Lab\cite{mittal2025isaaclab}は，Omniverse上に構築されたロ
   \centering
  \includegraphics[keepaspectratio, scale=0.8]
       {images/png/anymal.png}
- \caption{Learning to Walk in Minutes Using Massively Parallel Deep Reinforcement Learning (source: \cite{rudin2021learning})}
+ \caption{Learning to walk in minutes using massively parallel deep reinforcement learning (source: \cite{rudin2021learning})}
  \label{Fig:anymal}
 \end{figure}
 

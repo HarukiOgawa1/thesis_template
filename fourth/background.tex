@@ -1,6 +1,7 @@
 %!TEX root = ../thesis.tex
 
 本章では，前章で述べた報酬関数の各構成要素が，獲得される歩行動作にどのような影響を与えるかを検証するために行う実験条件と評価指標について述べる．
+
 \section{実験方法}
 本研究では，第3章で定義した報酬関数を構成する各項が，ヒューマノイドロボットの歩行動作獲得にどのような影響を与えるかを調査する．
 報酬関数に含まれる各項の重み係数$\omega_{i}$は，学習される動作の特性を決定づける重要なハイパーパラメータである．
@@ -21,6 +22,44 @@
 \end{itemize}
 
 各パラメータ設定において，同一のランダムシードを用いた学習を実施，学習完了後のポリシーを用いて次節の評価を行う．
+
+\subsection{学習アルゴリズムおよびハイパーパラメータ設定}
+本研究では，深層強化学習アルゴリズムとしてProximal Policy Optimization (PPO) \cite{schulman2017proximal} を採用した．
+学習はNVIDIA Isaac Labフレームワーク上で実施し，シミュレーション環境には4,096個の並列環境(Num Envs)を用いた．
+
+方策(Actor)および価値関数(Critic)のネットワーク構造には，共に3層の隠れ層を持つ多層パーセプトロン(MLP)を用いた．
+各隠れ層のユニット数は[256, 128, 128]であり，活性化関数にはELU (Exponential Linear Unit) を使用している．
+学習における最大イテレーション数は1,500回とし，各イテレーションにおける1環境あたりのステップ数は24ステップとした．
+これにより，学習全体での総サンプル数は約$1.47 \times 10^8$ステップとなる．
+
+本実験で使用した主なハイパーパラメータの設定をTable \ref{tab:hyperparameters}に示す．
+これらのパラメータは，標準的なLocomotionタスクにおける設定\cite{rudin2022learning}を参考に，予備実験を通じて調整を行ったものである．
+
+\begin{table}[H]
+    \centering
+    \caption{Hyperparameters for PPO training}
+    \label{tab:hyperparameters}
+    \begin{tabular}{lc}
+    \hline
+    \textbf{Parameter} & \textbf{Value} \\
+    \hline
+    Algorithm & PPO \\
+    Number of Environments & 4,096 \\
+    Max Iterations & 1,500 \\
+    Steps per Env per Iteration & 24 \\
+    Hidden Layers (Actor/Critic) & [256, 128, 128] \\
+    Activation Function & ELU \\
+    Optimizer & Adam \\
+    Learning Rate & $1.0 \times 10^{-3}$ (Adaptive) \\
+    Mini-batches & 4 \\
+    Num Learning Epochs & 5 \\
+    Discount Factor ($\gamma$) & 0.99 \\
+    GAE Parameter ($\lambda$) & 0.95 \\
+    Clip Parameter ($\epsilon$) & 0.2 \\
+    Entropy Coefficient & 0.008 \\
+    \hline
+    \end{tabular}
+\end{table}
 
 \section{評価指標}
 学習された歩行方策の性能を多角的に検証するため，先行研究\cite{van2024revisiting}\cite{peng2025gait}\cite{yoshida2025improving}

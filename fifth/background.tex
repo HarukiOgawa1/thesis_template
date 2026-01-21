@@ -58,7 +58,7 @@
   \centering
  \includegraphics[keepaspectratio, scale=0.08]
       {images/png/5track.png}
- \caption{When G1 starts walking, its torso leans back}
+ \caption{When g1 starts walking, its torso leans back}
  \label{Fig:When G1 starts walking, its torso leans back}
 \end{figure}
 
@@ -105,7 +105,7 @@
 
 \section{DOF Joint Limitsの影響}
 本節では，\textbf{DOF Joint Limits}（関節可動域制限に対するペナルティ）の影響について議論する．
-以下の図（Fig. \ref{fig:dof_limits}）は，DOF Joint Limitsのパラメータを $0.0$，$-0.6$，$-1.0$ と設定した際の，左足の関節トルク，角速度，および床反力を示したものである．
+以下の図は，DOF Joint Limitsのパラメータを $0.0$，$-0.6$，$-1.0$ と設定した際の，左足の関節トルク，角速度，および床反力を示したものである．
 グラフより，ペナルティの重みが増加するにつれて実質的な可動域が制限されたため，ankle\_roll のトルクと角速度は減少した．
 一方で，ankle\_pitch に関しては顕著な変化は見られなかった．
 また床反力の推移を確認すると，ペナルティが増加するほど着地時のピーク波形が変化し，徐々に先鋭化している（衝撃が鋭くなっている）傾向が確認された．
@@ -169,7 +169,14 @@
 以下の図は，Joint Deviation (Hip) のパラメータを $0.0$，$ -1.0$ と設定した際の，左足の関節角速度および歩幅を示したものである．
 グラフより，ペナルティ（重み）の増加に伴い hip\_joint の動きが抑制され，主として knee（膝）や ankle（足首）の関節を利用して歩行する傾向が見られた．
 その結果，歩行周期が短縮され（ハイピッチになり），歩幅の小さい小刻みな歩行動作が確認された．
--1.0の歩行の様子を貼る
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.08]
+      {images/png/hip-1.png}
+ \caption{Walking using knees and ankles}
+ \label{Fig:Walking using knees and ankles}
+\end{figure}
+
 \begin{figure}[H]
 \centering
 \begin{minipage}[b]{0.49\columnwidth}
@@ -216,8 +223,14 @@
 本節では，\textbf{DOF Acc L2}（関節加速度に対するペナルティ項）について議論する．以下の図は，DOF Acc L2のパラメータを 0.0，$ -5.0 \times 10^{-7}，-5.0 \times 10^{-6}$と設定した際の，左足の関節トルクおよび角速度を示したものである．
 グラフより，ペナルティの重みが増加するにつれて，hip\_pitchとknee\_pitch の角速度が抑制されていることがわかる．また Fig. \ref{fig:totalenergy_flat_dof} より，ペナルティが増えるほど歩行時の総仕事量は減少した．
 ただし，$-5.0 \times 10^{-6}$の設定では直進性が損なわれ，途中で大きく湾曲する挙動が見られた．なお，さらに値を大きくした$-5.0 \times 10^{-5}$では，過度な制約によりロボットは動作しなくなった．
-$-5.0 \times 10^{-6}$の歩行の様子をはる
 
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.08]
+      {images/png/acc.png}
+ \caption{Gait learned with a penalty of $-5.0 \times 10^{-6}$}
+ \label{Fig:Gait learned with a penalty of -5.0106}
+\end{figure}
 
 \begin{figure}[H]
 \centering
@@ -336,7 +349,13 @@ $-5.0 \times 10^{-6}$の歩行の様子をはる
 グラフより，ペナルティの重みが増加するにつれて，knee\_pitch の関節トルクと角速度，および hip\_yaw の角速度に増加傾向が見られる．また歩容に関しては，ペナルティが大きくなるほど地面を強く叩きつけるような挙動（着地衝撃の増加）が確認された．
 Fig. \ref{fig:totalenergy_flat_5} より，ペナルティ係数が-0.8および-1.0の設定では，総仕事量が増加していることがわかる．
 
-わかりやすい動画をはる
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.08]
+      {images/png/feetslide-1.png}
+ \caption{Walking with strong impact on the ground}
+ \label{Fig:Walking with strong impact on the ground}
+\end{figure}
 
 \begin{figure}[H]
 \centering

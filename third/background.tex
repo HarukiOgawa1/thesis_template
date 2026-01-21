@@ -7,7 +7,7 @@
 \section{実験装置}
 本実験の環境を表に示す．
 \begin{table}[hbtp]
-  \caption{Experimental Setup}
+  \caption{Experimental setup}
   \label{table:data_type}
   \centering
   \begin{tabular}{lcr}
@@ -26,19 +26,20 @@
 
 \section{エージェントと環境モデル}
 本研究では，エージェントとしてNVIDIA Isaac Labにて標準提供されているUnitree G1のロボットモデルを使用する．
-また，実験を行う環境モデルについては，\ref{fig:velocityflat}に示す平地環境を用いる．
-初期姿勢においては，ロボットのベース（骨盤）の高さは0.74 [m]に設定されている．ロボットの初期の関節角度は，直立姿勢を基準に定義されており，\ref{fig:velocityflat}および\ref{fig:velocityrough}に示すように，Hip Pitch関節は-0.20 [rad]，Knee関節は0.42 [rad]，Ankle Pitch関節は-0.23 [rad]に設定されている．
+また，実験を行う環境モデルについては，Fig. \ref{fig:velocityflat}に示す平地環境を用いる．
+初期姿勢においては，ロボットのベース（骨盤）の高さは0.74 [m]に設定されている．ロボットの初期の関節角度は，直立姿勢を基準に定義されており，\ref{fig:velocityflat}に示すように，Hip Pitch関節は-0.20 [rad]，Knee関節は0.42 [rad]，Ankle Pitch関節は-0.23 [rad]に設定されている．
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=1.0\columnwidth]{images/png/g1_flat.png}
-  \caption{Track a velocity command on flat terrain with the Unitree G1}
+  \includegraphics[keepaspectratio, scale=0.2]
+      {images/png/g1_flat.png}
+  \caption{Track a velocity command on flat terrain with the unitree g1}
     \label{fig:velocityflat}
 \end{figure}
 
 \begin{table}[H]
     \centering
-    \caption{Actuator Parameters of the Unitree G1 Robot Model}
+    \caption{Actuator parameters of the unitree g1 robot model}
     \label{tab:g1_actuator_params}
     \small
     \begin{tabularx}{\linewidth}{Xcccc}
@@ -56,7 +57,7 @@
 
 \section{状態・行動空間}
 
-\subsubsection{状態空間}
+\subsection{状態空間}
 エージェントが各時刻 $t$ において環境から受け取る観測ベクトル $\mathbf{o}_t$ は，ロボットの固有受容感覚および外部計測情報により構成される．
 \begin{itemize}
     \item \textbf{ベースリンク情報:} ベースの角速度，および重力ベクトルの射影（姿勢情報）
@@ -157,11 +158,12 @@
 $\omega_{\text{cmd}, z}$ は目標旋回角速度，$\omega_z$ は現在の旋回角速度である．
 また，$\mathbf{a}_t$ は時刻 $t$ における行動（目標関節角度変位），
 $\ddot{\mathbf{q}}$ は関節角加速度，$\boldsymbol{\tau}$ は関節トルクを表す．
+本実験の平地環境における各報酬項の重み係数 $\omega_{i}$ の設定値を表 \ref{tab:g1_flat_reward_params} に示す．本設定は，NVIDIA Isaac Labにて標準提供されているUnitree G1の学習用パラメータと同一である．
 
 % Flat環境の報酬関数パラメータ
 \begin{table}[H]
   \centering
-  \caption{Reward Function Parameters for the Unitree G1 Robot in Flat Terrain}
+  \caption{Reward function parameters for the unitree g1 robot in flat terrain}
   \label{tab:g1_flat_reward_params}
   \small % 表全体の文字サイズを少し小さくする
   % X は幅に合わせて自動調整・折り返しを行う列指定子
