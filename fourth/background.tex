@@ -6,8 +6,8 @@
 本研究では，第3章で定義した報酬関数を構成する各項が，ヒューマノイドロボットの歩行動作獲得にどのような影響を与えるかを調査する．
 報酬関数に含まれる各項の重み係数$\omega_{i}$は，学習される動作の特性を決定づける重要なハイパーパラメータである．
 本実験では，Table \ref{tab:g1_flat_reward_params}に示した標準のパラメータ設定を基準とし，調査対象とする特定の報酬項の重みのみを個別に変化させながら学習を行うことで，
-その項が歩行挙動に与える影響を分離して評価する．調査対象とする報酬項およびそのパラメータ(重み)は以下の通りである．なお，負の報酬については，0(無効化)から
-過剰な抑制まで段階的に値を変化させている．
+その項が歩行挙動に与える影響を分離して評価する．
+調査対象とする報酬項およびそのパラメータ(重み)は以下の通りである．なお，負の報酬については，0(無効化)から過剰な抑制まで段階的に値を変化させている．
 
 \begin{itemize}
   \item Track Lin Vel XY    ：目標並進速度への追従 [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 5.0]（default: 1.0）
@@ -21,23 +21,18 @@
   \item Flat orientation    ：ベースリンクの水平維持 [0.0, -0.1, -0.2, -0.4, -0.6, -0.8, -1.0]（default: 1.0）
 \end{itemize}
 
-各パラメータ設定において，同一のランダムシードを用いた学習を実施，学習完了後のポリシーを用いて次節の評価を行う．
 
 \subsection{学習アルゴリズムおよびハイパーパラメータ設定}
-本研究では，深層強化学習アルゴリズムとしてProximal Policy Optimization (PPO) \cite{schulman2017proximal} を採用した．
-学習はNVIDIA Isaac Labフレームワーク上で実施し，シミュレーション環境には4,096個の並列環境(Num Envs)を用いた．
+本研究では，深層強化学習アルゴリズムとしてProximal Policy Optimization (PPO) \cite{schulman2017proximal} を採用した．学習環境はNVIDIA Isaac Lab\cite{mittal2025isaaclab}フレームワーク上に構築されており，シミュレーションは4,096個の並列環境で実行される仕様となっている．
+方策(Actor)および価値関数(Critic)のネットワーク構造は，共に3層の隠れ層を持つ多層パーセプトロン(MLP)で構成されている．
+各隠れ層のユニット数は入力側から順に [256, 128, 128] となっており，活性化関数にはELU (Exponential Linear Unit) が使用されている．
+学習設定として，最大イテレーション数は1,500回，各イテレーションにおける1環境あたりのステップ数は24ステップとされている．
+これにより，学習全体での総サンプル数は約$1.47 \times 10^8$ステップとなる．本実験で使用した主なハイパーパラメータの設定をTable \ref{tab:hyperparameters}に示す．
 
-方策(Actor)および価値関数(Critic)のネットワーク構造には，共に3層の隠れ層を持つ多層パーセプトロン(MLP)を用いた．
-各隠れ層のユニット数は[256, 128, 128]であり，活性化関数にはELU (Exponential Linear Unit) を使用している．
-学習における最大イテレーション数は1,500回とし，各イテレーションにおける1環境あたりのステップ数は24ステップとした．
-これにより，学習全体での総サンプル数は約$1.47 \times 10^8$ステップとなる．
-
-本実験で使用した主なハイパーパラメータの設定をTable \ref{tab:hyperparameters}に示す．
-これらのパラメータは，標準的なLocomotionタスクにおける設定\cite{rudin2022learning}を参考に，予備実験を通じて調整を行ったものである．
 
 \begin{table}[H]
     \centering
-    \caption{Hyperparameters for PPO training}
+    \caption{Hyperparameters for ppo training}
     \label{tab:hyperparameters}
     \begin{tabular}{lc}
     \hline
@@ -97,73 +92,97 @@
 ただし，評価開始から20秒以上，スタートから左右3m以上離れた場合はその時点で終了とする．
 
 \section{標準パラメータによる学習結果}
-4.2節の評価指標に基づき，まず第3章 Table \ref{tab:g1_flat_reward_params}で示した標準パラメータを用いて学習を行った結果について述べる．Fig. \ref{Fig:Walking behavior with standard parameters}に，学習済みポリシーを用いた評価時の歩行動作の様子および各センサデータの時系列波形を示す．\\
-　実験結果より，目標速度$1.0[m/s]$に対して，定常状態での平均速度は概ね目標値を達成しており，追従誤差は許容範囲内に収まっていることがわかる．
-また，歩行中の姿勢に関しては，ロボットのベースのロール，ピッチ角の振れ幅は小さく抑えられており，\textbf{Flat orientation}および\textbf{Lin Vel Z L2}の報酬項が適切に機能していることが示唆される．
-
+本節では，前節で定めた評価指標に基づき，まず第3章 Table \ref{tab:g1_flat_reward_params}で示した標準パラメータを用いて学習を行った結果について述べる．Fig. \ref{Fig:Walking behavior with standard parameters}に，学習済みポリシーを用いた評価時の歩行動作の様子および各センサデータの時系列波形を示す．\\
+　実験結果より，目標速度$1.0[m/s]$に対して，定常状態での平均速度は概ね目標値を達成していることがわかる．
+また，評価指標に基づいて計測した時系列データを\ref{Fig:Left foot torque during walking behavior learned with default parameter}〜\ref{Fig:Trajectory side view of walking motion learned with default parameters}に示す．
 \begin{figure}[H]
   \centering
  \includegraphics[keepaspectratio, scale=0.08]
       {images/png/sequence_final.png}
- \caption{Walking behavior with standard parameters}
- \label{Fig:Walking behavior with standard parameters}
+ \caption{Walking behavior learned with default parameters}
+ \label{Fig:Walking behavior learned with default parameters}
 \end{figure}
 
 % 評価指標に則りFlat環境のデフォルトパラメータで学習した結果をプロットした図
 \begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_track_lin_vel_xy_exp/10/Left_Torques.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_track_lin_vel_xy_exp/10/Right_Torques.png}
-\end{minipage}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_track_lin_vel_xy_exp/10/Left_Velocity.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_track_lin_vel_xy_exp/10/Right_Velocity.png}
-\end{minipage}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_track_lin_vel_xy_exp/10/footprint_2d.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_track_lin_vel_xy_exp/10/foot_force_plot.png}
-\end{minipage}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.47\columnwidth}
-    \centering
-    \includegraphics[width=0.9\columnwidth]{images/g1_flat_track_lin_vel_xy_exp/10/stability_analysis.png}
-    \vfill
-    \includegraphics[width=0.9\columnwidth]{images/g1_flat_track_lin_vel_xy_exp/10/stride_length_analysis.png}
-\end{minipage}
-\begin{minipage}[b]{0.51\columnwidth}
-    \centering
-    \includegraphics[width=0.9\columnwidth]{images/g1_flat_track_lin_vel_xy_exp/10/velocity_tracking.png}
-\end{minipage}
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_track_lin_vel_xy_exp/10/Left_Torques.png}
+ \caption{Left foot torque during walking behavior learned with default parameters}
+ \label{Fig:Left foot torque during walking behavior learned with default parameter}
 \end{figure}
 
 \begin{figure}[H]
   \centering
- \includegraphics[keepaspectratio, scale=0.3]
-      {images/g1_flat_track_lin_vel_xy_exp/10/trajectory_side_view.png}
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_track_lin_vel_xy_exp/10/Right_Torques.png}
+ \caption{Right foot torque during walking behavior learned with default parameter}
+ \label{Fig:Right foot torque during walking behavior learned with default parameter}
 \end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_track_lin_vel_xy_exp/10/Left_Velocity.png}
+ \caption{Left foot angular velocity during walking behavior learned with default parameter}
+ \label{Fig:Right foot angular velocity during walking behavior learned with default parameter}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_track_lin_vel_xy_exp/10/Right_Velocity.png}
+ \caption{Right foot angular velocity during walking behavior learned with default parameter}
+ \label{Fig:Right foot angular velocity during walking behavior learned with default parameter}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_track_lin_vel_xy_exp/10/footprint_2d.png}
+ \caption{2d trajectory of walking motion learned with default parameters}
+ \label{Fig:2d trajectory of walking motion learned with default parameters}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_track_lin_vel_xy_exp/10/foot_force_plot.png}
+ \caption{Ground reaction force of walking motion learned with default parameters}
+ \label{Fig:Ground reaction force of walking motion learned with default parameters}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_track_lin_vel_xy_exp/10/stability_analysis.png}
+ \caption{Stability analysis of walking motion learned with default parameters}
+ \label{Fig:Stability analysis of walking motion learned with default parameters}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_track_lin_vel_xy_exp/10/stride_length_analysis.png}
+ \caption{Stride length analysis of walking motion learned with default parameters}
+ \label{Fig:Stride length analysis of walking motion learned with default parameters}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_track_lin_vel_xy_exp/10/velocity_tracking.png}
+ \caption{Velocity tracking of walking motion learned with default parameters}
+ \label{Fig:Velocity tracking of walking motion learned with default parameters}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_track_lin_vel_xy_exp/10/trajectory_side_view.png}
+ \caption{Trajectory side view of walking motion learned with default parameters}
+ \label{Fig:Trajectory side view of walking motion learned with default parameters}
+\end{figure}
+
 
 \newpage
