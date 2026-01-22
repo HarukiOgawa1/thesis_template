@@ -22,11 +22,11 @@
 \end{itemize}
 
 
-\subsection{学習アルゴリズムおよびハイパーパラメータ設定}
+\section{学習アルゴリズムおよびハイパーパラメータ設定}
 本研究では，深層強化学習アルゴリズムとしてProximal Policy Optimization (PPO) \cite{schulman2017proximal} を採用した．学習環境はNVIDIA Isaac Lab\cite{mittal2025isaaclab}フレームワーク上に構築されており，シミュレーションは4,096個の並列環境で実行される仕様となっている．
 方策(Actor)および価値関数(Critic)のネットワーク構造は，共に3層の隠れ層を持つ多層パーセプトロン(MLP)で構成されている．
-各隠れ層のユニット数は入力側から順に [256, 128, 128] となっており，活性化関数にはELU (Exponential Linear Unit) が使用されている．
-学習設定として，最大イテレーション数は1,500回，各イテレーションにおける1環境あたりのステップ数は24ステップとされている．
+各隠れ層のユニット数は入力側から順に [256, 128, 128] となっており，活性化関数にはELU (Exponential Linear Unit) を使用する．
+学習設定として，最大イテレーション数は1,500回，各イテレーションにおける1環境あたりのステップ数は24ステップとする．
 これにより，学習全体での総サンプル数は約$1.47 \times 10^8$ステップとなる．本実験で使用した主なハイパーパラメータの設定をTable \ref{tab:hyperparameters}に示す．
 
 
@@ -74,12 +74,12 @@
     左右の足の着地位置（Y軸方向の距離）を計測する．左右の歩幅が均等であるか対称性も併せて確認し，安定した歩容が形成されているかを判断する．
 
     \item \textbf{重心位置と足上げ高さ} \\
-    ロボット全体の重心 (CoM) の軌跡と，遊脚中の足先高さ（Foot Clearance）を計測する．
+    ロボット全体の重心 (CoM) の軌跡と，遊脚中の足先高さを計測する．
 
     \item \textbf{関節トルクおよび角速度} \\
     各関節の出力トルク $\tau$ および角速度 $\dot{q}$ の時系列データを計測する．これらがハードウェアの許容限界内に収まっているかを確認する．
 
-    \item \textbf{総仕事量 (Total Mechanical Work)} \\
+    \item \textbf{総仕事量} \\
     評価区間（Flat環境: $10\,\mathrm{m}$）を走行するのに要した機械的仕事量の総和である．van Marum ら\cite{van2024revisiting}を参考に各関節の出力トルクと角速度の積の総和．
 
     \item \textbf{各報酬項の推移} \\
@@ -92,65 +92,29 @@
 ただし，評価開始から20秒以上，スタートから左右3m以上離れた場合はその時点で終了とする．
 
 \section{標準パラメータによる学習結果}
-本節では，前節で定めた評価指標に基づき，まず第3章 Table \ref{tab:g1_flat_reward_params}で示した標準パラメータを用いて学習を行った結果について述べる．Fig. \ref{Fig:Walking behavior with standard parameters}に，学習済みポリシーを用いた評価時の歩行動作の様子および各センサデータの時系列波形を示す．\\
-　実験結果より，目標速度$1.0[m/s]$に対して，定常状態での平均速度は概ね目標値を達成していることがわかる．
-また，評価指標に基づいて計測した時系列データを\ref{Fig:Left foot torque during walking behavior learned with default parameter}〜\ref{Fig:Trajectory side view of walking motion learned with default parameters}に示す．
-\begin{figure}[H]
-  \centering
- \includegraphics[keepaspectratio, scale=0.08]
-      {images/png/sequence_final.png}
- \caption{Walking behavior learned with default parameters}
- \label{Fig:Walking behavior learned with default parameters}
-\end{figure}
+本節では，前節で定めた評価指標に基づき，標準パラメータ（Table \ref{tab:g1_flat_reward_params}）を用いて学習を行った結果についてに述べる． 学習済みポリシーによる歩行動作の様子をFig. \ref{Fig:Walking behavior learned with default parameters}に示す．以下，4.2節で挙げた各評価指標順に，計測された時系列データについて解説する．
 
-% 評価指標に則りFlat環境のデフォルトパラメータで学習した結果をプロットした図
 \begin{figure}[H]
-  \centering
- \includegraphics[keepaspectratio, scale=0.4]
-      {images/g1_flat_track_lin_vel_xy_exp/10/Left_Torques.png}
- \caption{Left foot torque during walking behavior learned with default parameters}
- \label{Fig:Left foot torque during walking behavior learned with default parameter}
-\end{figure}
+    \centering
+   \includegraphics[keepaspectratio, scale=0.08]
+        {images/png/sequence_final.png}
+   \caption{Walking behavior learned with default parameters}
+   \label{Fig:Walking behavior learned with default parameters}
+  \end{figure}
+
+\subsection{歩行速度追従率}
+ロボットの目標速度に対する追従性能をFig. \ref{Fig:Velocity tracking of walking motion learned with default parameters}に示す．本グラフの横軸は経過時間[s]を表しており，縦軸は上から順にベースリンクの並進速度X（前方），並進速度Y（側方），および角速度Z（ヨー回転）を示している． グラフ最上段の並進速度Xの推移を見ると，歩行開始直後の加速区間を経て，約2秒以降は目標速度である$1.0,\mathrm{m/s}$付近で推移している．定常状態においては大きなオーバーシュートや振動は見られず，一定の速度が維持されている．
 
 \begin{figure}[H]
   \centering
- \includegraphics[keepaspectratio, scale=0.4]
-      {images/g1_flat_track_lin_vel_xy_exp/10/Right_Torques.png}
- \caption{Right foot torque during walking behavior learned with default parameter}
- \label{Fig:Right foot torque during walking behavior learned with default parameter}
+ \includegraphics[keepaspectratio, scale=0.3]
+      {images/g1_flat_track_lin_vel_xy_exp/10/velocity_tracking.png}
+ \caption{Velocity tracking of walking motion learned with default parameters}
+ \label{Fig:Velocity tracking of walking motion learned with default parameters}
 \end{figure}
 
-\begin{figure}[H]
-  \centering
- \includegraphics[keepaspectratio, scale=0.4]
-      {images/g1_flat_track_lin_vel_xy_exp/10/Left_Velocity.png}
- \caption{Left foot angular velocity during walking behavior learned with default parameter}
- \label{Fig:Right foot angular velocity during walking behavior learned with default parameter}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
- \includegraphics[keepaspectratio, scale=0.4]
-      {images/g1_flat_track_lin_vel_xy_exp/10/Right_Velocity.png}
- \caption{Right foot angular velocity during walking behavior learned with default parameter}
- \label{Fig:Right foot angular velocity during walking behavior learned with default parameter}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
- \includegraphics[keepaspectratio, scale=0.4]
-      {images/g1_flat_track_lin_vel_xy_exp/10/footprint_2d.png}
- \caption{2d trajectory of walking motion learned with default parameters}
- \label{Fig:2d trajectory of walking motion learned with default parameters}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
- \includegraphics[keepaspectratio, scale=0.4]
-      {images/g1_flat_track_lin_vel_xy_exp/10/foot_force_plot.png}
- \caption{Ground reaction force of walking motion learned with default parameters}
- \label{Fig:Ground reaction force of walking motion learned with default parameters}
-\end{figure}
+\subsection{胴体の姿勢偏差}
+歩行中の姿勢安定性に関する解析結果をFig. \ref{Fig:Stability analysis of walking motion learned with default parameters}に示す．このグラフの横軸は経過時間[s]，縦軸はベースリンクのロール角(Roll)およびピッチ角(Pitch)を表している．ロール角，ピッチ角ともに歩行周期に同期した振動波形を示しているが，その振幅は一定の範囲内に収束しており，時間経過に伴って姿勢が発散したり，特定方向へ大きく傾いたりする挙動は確認されない．
 
 \begin{figure}[H]
   \centering
@@ -160,6 +124,29 @@
  \label{Fig:Stability analysis of walking motion learned with default parameters}
 \end{figure}
 
+\subsection{床反力}
+接地時の状態を示す床反力（垂直成分）の推移をFig. \ref{Fig:Ground reaction force of walking motion learned with default parameters}に示す．横軸は経過時間[s]であり，縦軸については左右の接地タイミングを視覚的に分離するため，正の値が左足(Left Foot)，負の値が右足(Right Foot)の床反力を表す形式としている．グラフより，左右の足が交互に接地と離地を繰り返す周期的なパターンが明瞭に確認できる．
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_track_lin_vel_xy_exp/10/foot_force_plot.png}
+ \caption{Ground reaction force of walking motion learned with default parameters}
+ \label{Fig:Ground reaction force of walking motion learned with default parameters}
+\end{figure}
+
+\subsection{歩幅および左右対称性}
+歩容の対称性および着地位置の正確性を検証するため，歩幅の解析結果をFig. \ref{Fig:Stride length analysis of walking motion learned with default parameters}に，2次元平面上の足跡（Footprint）をFig. \ref{Fig:2d trajectory of walking motion learned with default parameters}に示す．Fig. \ref{Fig:Stride length analysis of walking motion learned with default parameters}の横軸は歩数(Step count)，縦軸は1歩ごとの歩幅(Stride length)である．歩行開始直後の数歩を除き，歩幅は一定値に収束しており，左右の脚で均等なストライドが刻まれている．また，Fig. \ref{Fig:2d trajectory of walking motion learned with default parameters}では，X軸をロボットの進行方向（前後），Y軸を左右方向として着地位置をプロットしている．Y軸方向（左右）へのばらつきが小さく，X軸に沿って直線的に足跡が配置されている．
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_track_lin_vel_xy_exp/10/footprint_2d.png}
+ \caption{2d trajectory of walking motion learned with default parameters}
+ \label{Fig:2d trajectory of walking motion learned with default parameters}
+\end{figure}
+
+
 \begin{figure}[H]
   \centering
  \includegraphics[keepaspectratio, scale=0.4]
@@ -168,21 +155,50 @@
  \label{Fig:Stride length analysis of walking motion learned with default parameters}
 \end{figure}
 
-\begin{figure}[H]
-  \centering
- \includegraphics[keepaspectratio, scale=0.4]
-      {images/g1_flat_track_lin_vel_xy_exp/10/velocity_tracking.png}
- \caption{Velocity tracking of walking motion learned with default parameters}
- \label{Fig:Velocity tracking of walking motion learned with default parameters}
-\end{figure}
+\subsection{重心位置と足上げ高さ}
+ロボットの側面からの軌跡（Side view trajectory）をFig. \ref{Fig:Trajectory side view of walking motion learned with default parameters}に示す．横軸はロボットの進行方向(X)，縦軸は高さ(Z)を表している．このグラフにおける足先軌跡（下部の黒波線）に着目すると，遊脚期において足先が地面（Z=0）から一定の高さまで持ち上がっていることが確認できる．また，その軌跡は毎歩ごとにほぼ同一の放物線を描いている．
 
 \begin{figure}[H]
   \centering
- \includegraphics[keepaspectratio, scale=0.4]
+ \includegraphics[keepaspectratio, scale=0.3]
       {images/g1_flat_track_lin_vel_xy_exp/10/trajectory_side_view.png}
  \caption{Trajectory side view of walking motion learned with default parameters}
  \label{Fig:Trajectory side view of walking motion learned with default parameters}
 \end{figure}
 
+\subsection{関節トルクおよび角速度}
+各関節の駆動状況を示す時系列データをFig. \ref{Fig:Left foot torque during walking behavior learned with default parameter}〜\ref{Fig:Right foot angular velocity during walking behavior learned with default parameter}に示す． これらのグラフにおいて，横軸はすべて経過時間[s]を表しており，縦軸はそれぞれ各関節の出力トルク[Nm]および角速度[rad/s]を示している．計測された全区間において，トルクおよび角速度の値は発散することなく推移している．
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.45]
+      {images/g1_flat_track_lin_vel_xy_exp/10/Left_Torques.png}
+ \caption{Left foot torque during walking behavior learned with default parameters}
+ \label{Fig:Left foot torque during walking behavior learned with default parameter}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.45]
+      {images/g1_flat_track_lin_vel_xy_exp/10/Right_Torques.png}
+ \caption{Right foot torque during walking behavior learned with default parameter}
+ \label{Fig:Right foot torque during walking behavior learned with default parameter}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.43]
+      {images/g1_flat_track_lin_vel_xy_exp/10/Left_Velocity.png}
+ \caption{Left foot angular velocity during walking behavior learned with default parameter}
+ \label{Fig:Left foot angular velocity during walking behavior learned with default parameter}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.43]
+      {images/g1_flat_track_lin_vel_xy_exp/10/Right_Velocity.png}
+ \caption{Right foot angular velocity during walking behavior learned with default parameter}
+ \label{Fig:Right foot angular velocity during walking behavior learned with default parameter}
+\end{figure}
 
 \newpage
