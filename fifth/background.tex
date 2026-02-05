@@ -25,34 +25,14 @@
 \end{figure}
 
 \section{Track Lin Vel XYの影響}
-本節は，\textbf{Track Lin Vel XY}について議論する．
-以下の図は，Track Lin Vel XYのパラメータを1.0および2.0とした際の速度追従率と左右の歩幅を示したものである．
-グラフを比較すると，パラメータの値が大きくなるにつれて目標速度への追従がより厳密となった．その影響により，歩行開始時に急激に$1 [m/s]$へ到達しようとした結果，ロボットの上半身が後方へ仰け反るような挙動が確認された．
-また，Fig. \ref{fig:totalenergy_flat_track}より，速度追従を厳守するほど総仕事量が増加する傾向を確認できた．
-
-\begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_track_lin_vel_xy_exp/10/velocity_tracking.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_track_lin_vel_xy_exp/20/velocity_tracking.png}
-\end{minipage}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_track_lin_vel_xy_exp/10/stride_length_analysis.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_track_lin_vel_xy_exp/20/stride_length_analysis.png}
-\end{minipage}
-\end{figure}
+本節では，\textbf{Track Lin Vel XY}（目標並進速度への追従報酬）の重みを[0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 5.0]のように変化させた場合の影響について述べる．
+Fig. \ref{fig:Velocity tracking performance (reward: Track Lin Vel XY, weight: 1.0)}〜\ref{fig:Stability analysis (reward: Track Lin Vel XY, weight: 2.0)}は，Track Lin Vel XYの重みを1.0および2.0とした際の速度追従率と胴体の姿勢偏差を示したものである．
+まず，重みの値が大きくなるにつれて目標速度への追従性が向上し，歩行開始時に急激に$1.0\,[m/s]$へ到達しようとする傾向が見られた．その結果，ロボットの上半身が後方へ大きく傾く挙動（Fig. \ref{Fig:When G1 starts walking, its torso leans back}，後傾）が確認された．
+また，Fig. \ref{fig:totalenergy_flat_track}より，速度追従の優先度が高まる（重みが増加する）ほど，総仕事量が増加する傾向も確認された．
+これは目標並進速度への追従を最優先した結果，ロボットの姿勢を水平維持する報酬である\textbf{Flat Orientation}や，関節トルクおよび角速度の抑制（\textbf{DOF Torques L2}，\textbf{DOF Acc L2}）を促す報酬項の影響が相対的に低下したためである．
+本来，人間が急加速を行う場合，加速に伴う慣性モーメントを打ち消し，効率的に推進力を得るためには，重心を進行方向へ傾ける前傾姿勢をとることが力学的に合理的である．
+しかし，本実験で確認された後傾しながらの加速は，速度追従の重みが支配的になりすぎたことで，エージェントが姿勢安定のための予備動作（前傾）に時間を費やすよりも，大きなトルクを発揮して脚部を先行させ，即時的に目標速度誤差を最小化することを優先した結果であると解釈できる．
+すなわち，エネルギー効率や姿勢安定性を犠牲にしてでも，慣性による上体の遅れを許容する近視眼的な方策が学習されたことを示唆している．
 
 \begin{figure}[H]
   \centering
@@ -62,45 +42,102 @@
  \label{Fig:When G1 starts walking, its torso leans back}
 \end{figure}
 
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.5]
+      {images/g1_flat_track_lin_vel_xy_exp/10/velocity_tracking.png}
+      \caption{Velocity tracking performance (reward: Track Lin Vel XY, weight: 1.0)}
+    \label{fig:Velocity tracking performance (reward: Track Lin Vel XY, weight: 1.0)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.5]
+      {images/g1_flat_track_lin_vel_xy_exp/20/velocity_tracking.png}
+      \caption{Velocity tracking performance (reward: Track Lin Vel XY, weight: 2.0)}
+    \label{fig:Velocity tracking performance (reward: Track Lin Vel XY, weight: 2.0)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_track_lin_vel_xy_exp/10/stability_analysis.png}
+      \caption{Stability analysis (reward: Track Lin Vel XY, weight: 1.0)}
+    \label{fig:Stability analysis (reward: Track Lin Vel XY, weight: 1.0)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_track_lin_vel_xy_exp/20/stability_analysis.png}
+      \caption{Stability analysis (reward: Track Lin Vel XY, weight: 2.0)}
+    \label{fig:Stability analysis (reward: Track Lin Vel XY, weight: 2.0)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.5]
+      {images/png/totalenergy_track.png}
+    \caption{Total energy by Track lin vel xy exp and Feet Air Time parameters}
+    \label{fig:totalenergy_flat_track}
+\end{figure}
+
 \section{Feet air timeの影響}
-本節は，\textbf{Feet air time}について議論する．
-以下の図は，Feet air timeのパラメータを0.0および1.0とした際の左足の関節トルク，角速度と歩行軌跡を示したものである．
-これらを比較すると，パラメータの値が大きくなるにつれて歩行周期が標準パラメータよりも遅くなり歩幅の距離が増えた．1.0の場合は左右の遊脚時で歩行の位相が対称ではなくなっていることがわかった．
-また，hip\_pitch\_jointとknee\_pitchの関節トルクと角速度がそれぞれ増加しているが，Fig. \ref{fig:totalenergy_flat_track}より，総仕事量に変化はない．
+本節では，\textbf{Feet air time}（遊脚時間の確保）の重みを[0.0, 0.1, 0.2, 0.4, 0.6, 0.8, 1.0]のように変化させた場合の影響について述べる．
+Fig. \ref{fig:Maximum, mean, and standard deviation of joint angular velocity per gait cycle (reward: Feet Air Time, weight: 0.0)}〜\ref{Fig:Maximum, mean, and standard deviation of joint angular velocity per gait cycle (reward: Feet Air Time, weight: 1.0)}は，\textbf{Feet air time}を0.0および1.0とした際の1歩行周期あたりの各関節のトルクおよび角速度の最大値，平均値，標準偏差を表すグ
+ラフを示したグラフである．また，\textbf{Feet air time}を1.0の場合のFig. \ref{Fig:Side view of walking motion trajectories (reward: Feet Air Time, weight: 1.0)}は重心位置と足上げ高さ，Fig. \ref{Fig:Ground reaction force of walking gait (reward: Feet Air Time, weight: 1.0)}は床反力を示したものである．
+
+実験の結果，重みの増加に伴い歩行周期が長くなり，歩幅が0.3 [m]から0.5 [m]へと増大する傾向が確認された．遊脚時間を長く確保するためには，足をより高く持ち上げるか，あるいは滞空時間を稼ぐために一歩の移動距離（ストライド）を伸ばす必要がある．本実験においては，同時に関節トルクを抑制する報酬（\textbf{DOF Torques L2}）が設定されている．そのため，大きなトルクを要する足上げ動作を行うよりも，慣性を利用して歩幅を広げる戦略の方がエネルギー効率の観点で有利となり，学習器がこの歩容を選択したと推測される．
+また，重みが1.0の場合において，左右の遊脚時で歩行の対称性が崩れる現象が確認された．これは，\textbf{Feet air time}報酬が過大になったことで，関節の初期位置からの逸脱抑制する報酬である\textbf{Joint Deviation}との競合が発生し，
+安定限界まで滞空時間を延ばそうする局所解に陥ったことが原因であると考えられる．
+なお，歩幅の増大に伴い通常懸念される関節トルクや角速度の顕著な増加は確認されなかった．これは，前述の通り歩行周期が長くなったこと，すなわち動作全体が緩やかになったことで，急激な加減速に伴う慣性力が抑制されたためであると解釈できる．
+
 \begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_air_time/0/Left_Torques.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_air_time/10/Left_Torques.png}
-\end{minipage}
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_feet_air_time/0/CycleStats_Torques.png}
+      \caption{Maximum, mean, and standard deviation of joint angular velocity per gait cycle (reward: Feet Air Time, weight: 0.0)}
+    \label{fig:Maximum, mean, and standard deviation of joint angular velocity per gait cycle (reward: Feet Air Time, weight: 0.0)}
 \end{figure}
 
 \begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_air_time/0/Left_Velocity.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_air_time/10/Left_Velocity.png}
-\end{minipage}
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_feet_air_time/10/CycleStats_Torques.png}
+      \caption{Maximum, mean, and standard deviation of joint angular velocity per gait cycle (reward: Feet Air Time, weight: 1.0)}
+    \label{fig:Maximum, mean, and standard deviation of joint angular velocity per gait cycle (reward: Feet Air Time, weight: 1.0)}
 \end{figure}
 
 \begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_air_time/0/trajectory_side_view.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_air_time/10/trajectory_side_view.png}
-\end{minipage}
+  \centering
+ \includegraphics[keepaspectratio, scale=0.43]
+      {images/g1_flat_feet_air_time/0/CycleStats_Velocities.png}
+ \caption{Maximum, mean, and standard deviation of joint angular velocity per gait cycle (reward: Feet Air Time, weight: 0.0)}
+ \label{Fig:Maximum, mean, and standard deviation of joint angular velocity per gait cycle (reward: Feet Air Time, weight: 0.0)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.43]
+      {images/g1_flat_feet_air_time/10/CycleStats_Velocities.png}
+ \caption{Maximum, mean, and standard deviation of joint angular velocity per gait cycle (reward: Feet Air Time, weight: 1.0)}
+ \label{Fig:Maximum, mean, and standard deviation of joint angular velocity per gait cycle (reward: Feet Air Time, weight: 1.0)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_feet_air_time/10/trajectory_side_view.png}
+ \caption{Side view of walking motion trajectories (reward: Feet Air Time, weight: 1.0)}
+ \label{Fig:Side view of walking motion trajectories (reward: Feet Air Time, weight: 1.0)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_feet_air_time/10/foot_force_plot.png}
+ \caption{Ground reaction force of walking gait (reward: Feet Air Time, weight: 1.0)}
+ \label{Fig:Ground reaction force of walking gait (reward: Feet Air Time, weight: 1.0)}
 \end{figure}
 
 \section{DOF Joint Limitsの影響}
@@ -204,19 +241,24 @@
 
 \section{Lin Vel Z L2の影響}
 本節では，\textbf{Lin Vel Z L2}（重心鉛直速度に対するペナルティ項）について議論する．以下の図は，Lin Vel Z L2のパラメータ（重み係数）を 0.0 および −1.0 と設定した際の，重心位置と足上げ高さの推移を示したものである．
-本実験の評価指標全体においては顕著な変化は見られなかったが，Fig. \ref{fig:totalenergy_flat_5} を参照すると，ペナルティ項の導入により重心位置の上下動が抑制されていることが確認できる．
+本実験の評価指標全体においては顕著な変化は見られなかったが，ペナルティ項の導入により重心位置の上下動が抑制されていることが確認できる．
 これは，歩行動作に必然的に伴う重心の上下動に対して，ペナルティが過度な動きを制限するように作用したためであると考えられる．
 
+Fig. \ref{Fig:Side view of walking motion trajectories (reward: Lin Vel Z L2, weight: 0.0)}，\ref{Fig:Side view of walking motion trajectories (reward: Lin Vel Z L2, weight: 1.0)}
 \begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_lin_vel_z_l2/0/trajectory_side_view.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_lin_vel_z_l2/10/trajectory_side_view.png}
-\end{minipage}
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_lin_vel_z_l2/0/trajectory_side_view.png}
+ \caption{Side view of walking motion trajectories (reward: Lin Vel Z L2, weight: 0.0)}
+ \label{Fig:Side view of walking motion trajectories (reward: Lin Vel Z L2, weight: 0.0)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_lin_vel_z_l2/10/trajectory_side_view.png}
+ \caption{Side view of walking motion trajectories (reward: Lin Vel Z L2, weight: 1.0)}
+ \label{Fig:Side view of walking motion trajectories (reward: Lin Vel Z L2, weight: 1.0)}
 \end{figure}
 
 \section{DOF Acc L2の影響}
@@ -248,11 +290,11 @@
 \centering
 \begin{minipage}[b]{0.49\columnwidth}
     \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_acc_l2/257/Left_Torques.png}
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_acc_l2/17/Left_Torques.png}
 \end{minipage}
 \begin{minipage}[b]{0.49\columnwidth}
     \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_acc_l2/257/Left_Velocity.png}
+    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_acc_l2/17/Left_Velocity.png}
 \end{minipage}
 \end{figure}
 

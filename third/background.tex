@@ -116,7 +116,7 @@
     \begin{equation}
       r_{\text{air\_time}} = \sum_{\text{foot}} \mathbb{I}_{\text{single\_stance}} \cdot \min(t_{\text{air, foot}}, \theta_{\text{threshold}})
     \end{equation}
-    ここで，$t_air,foot$は各足が滞空している時間，$\theta_{\text{threshold}} = 0.4[s]$は上限閾値である．
+    ここで，$t_{air,foot}$は各足が滞空している時間，$\theta_{\text{threshold}} = 0.4[s]$は上限閾値である．
   \item \textbf{Lin Vel Z L2}：歩行中の上下動を抑制する．
     \begin{equation}
       r_{\text{lin\_vel\_z}} = - v_z^2
@@ -129,29 +129,29 @@
     \begin{equation}
       r_{\text{dof\_acc}} = - \| \ddot{\mathbf{q}} \|^2
     \end{equation}
-    Hip, Kneeに対して適用される．
+    本環境では，Hip, Kneeに対して適用される．
   \item \textbf{DOF Torques L2}：関節トルク$\boldsymbol{\tau}$の大きさを抑制する．
     \begin{equation}
       r_{\text{dof\_torques}} = - \| \boldsymbol{\tau} \|^2
     \end{equation}
-    Flat環境では，Hip，Knee，Rough環境ではHip，Knee，Ankleに対して適用される．
+    本環境では，Hip，Kneeに対して適用される．
   \item \textbf{Feet Slide}：接地している足の水平速度$v_{foot,xy}$に対するペナルティを与え，地面に滑ることを防ぐ．
     \begin{equation}
       r_{\text{slide}} = - \sum_{\text{foot}} \mathbb{I}_{\text{contact}} \cdot \| \mathbf{v}_{\text{foot}, xy} \|
     \end{equation}
-  \item \textbf{Joint deviation(hip)}：特定の関節が，初期姿勢から大きく逸脱することを防ぎ，不自然な脚の開閉を抑制する．
+  \item \textbf{Joint Deviation(Hip)}：特定の関節が，初期姿勢から大きく逸脱することを防ぎ，不自然な脚の開閉を抑制する．
     \begin{equation}
-      r_{\text{joint\_dev}} = - \sum_{j \in \mathcal{J}_{\text{target}}} | q_j - q_{j}^{\text{default}} |
+      r_{\text{joint\_deviation}} = - \sum_{j \in \mathcal{J}_{\text{target}}} | q_j - q_{j}^{\text{default}} |
     \end{equation}
-  \item \textbf{Flat orientation}：ロボットの体幹(Base Link)が地面に対して水平であることを促す．
+  \item \textbf{Flat Orientation}：ロボットの体幹(Base Link)が地面に対して水平であることを促す．
     \begin{equation}
-      r_{\text{flat\_orient}} = - \| \mathbf{g}^{\text{robot}}_{xy} \|^2
+      r_{\text{flat\_orientation}} = - \| \mathbf{g}^{\text{robot}}_{xy} \|^2
     \end{equation}
-  \item \textbf{DOF Joint limits}(関節可動域ペナルティ)：各関節が可動域限界に近づきすぎることを防ぐ．
+  \item \textbf{DOF Joint Limits}(関節可動域ペナルティ)：各関節が可動域限界に近づきすぎることを防ぐ．
   \begin{equation}
     r_{\text{limits}} = - \sum_{j} \left( \max(0, q_j - q_{j}^{\text{max}} + \epsilon) + \max(0, q_{j}^{\text{min}} - q_j + \epsilon) \right)
   \end{equation}
-  Ankleに対して適用される．
+  本環境では，Ankleに対して適用される．
 \end{itemize}
 
 また，$\mathbf{v}_{\text{cmd}, xy}$ は目標並進速度，$\mathbf{v}_{xy}$ は現在の並進速度，
