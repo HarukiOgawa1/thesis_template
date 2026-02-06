@@ -58,7 +58,7 @@
 
 \section{評価指標}
 学習された歩行方策の性能を多角的に検証するため，先行研究\cite{van2024revisiting}\cite{peng2025gait}\cite{yoshida2025improving}
-のベンチマーク手法を参考に，運動性能，動作安定性，およびエネルギー効率の観点から以下の8つの指標を選定した．
+のベンチマーク手法を参考に，運動性能，動作安定性，およびエネルギー効率の観点から以下の7つの指標を選定した．
 
 \begin{itemize}
     \item \textbf{歩行速度追従率 (Velocity Tracking)} \\
@@ -81,9 +81,6 @@
 
     \item \textbf{総仕事量} \\
     評価区間（Flat環境: $10\,\mathrm{m}$）を走行するのに要した機械的仕事量の総和である．van Marum ら\cite{van2024revisiting}を参考に各関節の出力トルクと角速度の積の総和．
-
-    \item \textbf{各報酬項の推移} \\
-    調査対象とする報酬項およびそのパラメータを変化した学習の報酬項の推移を示す．
 \end{itemize}
 
 \section{評価シナリオ}

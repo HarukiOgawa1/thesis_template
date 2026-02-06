@@ -1,29 +1,4 @@
 %!TEX root = ../thesis.tex
-以下の図は，各報酬項のパラメータごとの総仕事量のグラフである．
-\begin{figure}[H]
-  \centering
- \includegraphics[keepaspectratio, scale=0.5]
-      {images/png/totalenergy_track.png}
-    \caption{Total Energy by Track lin vel xy exp and Feet Air Time parameters}
-    \label{fig:totalenergy_flat_track}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
- \includegraphics[keepaspectratio, scale=0.5]
-      {images/png/totalenergy_5.png}
-      \caption{Total Energy by DOF Joint Limits and Joint deviation(hip), Lin Vel Z L2, Feet Slide, Flat orientation L2 parameters}
-    \label{fig:totalenergy_flat_5}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
- \includegraphics[keepaspectratio, scale=0.5]
-      {images/png/totalenergy_dof.png}
-      \caption{Total Energy by DOF Acc L2 and DOF Torques parameters}
-    \label{fig:totalenergy_flat_dof}
-\end{figure}
-
 \section{Track Lin Vel XYの影響}
 本節では，\textbf{Track Lin Vel XY}（目標並進速度への追従報酬）の重みを[0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 5.0]のように変化させた場合の影響について述べる．
 Fig. \ref{fig:Velocity tracking performance (reward: Track Lin Vel XY, weight: 1.0)}〜\ref{fig:Stability analysis (reward: Track Lin Vel XY, weight: 2.0)}は，Track Lin Vel XYの重みを1.0および2.0とした際の速度追従率と胴体の姿勢偏差を示したものである．
@@ -78,42 +53,42 @@ Fig. \ref{fig:Velocity tracking performance (reward: Track Lin Vel XY, weight: 1
   \centering
  \includegraphics[keepaspectratio, scale=0.5]
       {images/png/totalenergy_track.png}
-    \caption{Total energy by Track lin vel xy exp and Feet Air Time parameters}
+    \caption{Total energy by Track Lin Vel XY and Feet Air Time parameters}
     \label{fig:totalenergy_flat_track}
 \end{figure}
 
 \section{Feet air timeの影響}
 本節では，\textbf{Feet air time}（遊脚時間の確保）の重みを[0.0, 0.1, 0.2, 0.4, 0.6, 0.8, 1.0]のように変化させた場合の影響について述べる．
-Fig. \ref{fig:Maximum, mean, and standard deviation of joint angular velocity per gait cycle (reward: Feet Air Time, weight: 0.0)}〜\ref{Fig:Maximum, mean, and standard deviation of joint angular velocity per gait cycle (reward: Feet Air Time, weight: 1.0)}は，\textbf{Feet air time}を0.0および1.0とした際の1歩行周期あたりの各関節のトルクおよび角速度の最大値，平均値，標準偏差を表すグ
+Fig. \ref{fig:Maximum, mean, and standard deviation of joint torques per gait cycle (reward: Feet Air Time, weight: 0.0)}〜\ref{Fig:Maximum, mean, and standard deviation of joint angular velocity per gait cycle (reward: Feet Air Time, weight: 1.0)}は，\textbf{Feet air time}を0.0および1.0とした際の1歩行周期あたりの各関節のトルクおよび角速度の最大値，平均値，標準偏差を表すグ
 ラフを示したグラフである．また，\textbf{Feet air time}を1.0の場合のFig. \ref{Fig:Side view of walking motion trajectories (reward: Feet Air Time, weight: 1.0)}は重心位置と足上げ高さ，Fig. \ref{Fig:Ground reaction force of walking gait (reward: Feet Air Time, weight: 1.0)}は床反力を示したものである．
 
 実験の結果，重みの増加に伴い歩行周期が長くなり，歩幅が0.3 [m]から0.5 [m]へと増大する傾向が確認された．遊脚時間を長く確保するためには，足をより高く持ち上げるか，あるいは滞空時間を稼ぐために一歩の移動距離（ストライド）を伸ばす必要がある．本実験においては，同時に関節トルクを抑制する報酬（\textbf{DOF Torques L2}）が設定されている．そのため，大きなトルクを要する足上げ動作を行うよりも，慣性を利用して歩幅を広げる戦略の方がエネルギー効率の観点で有利となり，学習器がこの歩容を選択したと推測される．
 また，重みが1.0の場合において，左右の遊脚時で歩行の対称性が崩れる現象が確認された．これは，\textbf{Feet air time}報酬が過大になったことで，関節の初期位置からの逸脱抑制する報酬である\textbf{Joint Deviation}との競合が発生し，
-安定限界まで滞空時間を延ばそうする局所解に陥ったことが原因であると考えられる．
+安定限界付近まで滞空時間を延ばそうする局所解に陥ったことが原因であると考えられる．
 なお，歩幅の増大に伴い通常懸念される関節トルクや角速度の顕著な増加は確認されなかった．これは，前述の通り歩行周期が長くなったこと，すなわち動作全体が緩やかになったことで，急激な加減速に伴う慣性力が抑制されたためであると解釈できる．
 
 \begin{figure}[H]
   \centering
  \includegraphics[keepaspectratio, scale=0.4]
       {images/g1_flat_feet_air_time/0/CycleStats_Torques.png}
-      \caption{Maximum, mean, and standard deviation of joint angular velocity per gait cycle (reward: Feet Air Time, weight: 0.0)}
-    \label{fig:Maximum, mean, and standard deviation of joint angular velocity per gait cycle (reward: Feet Air Time, weight: 0.0)}
+      \caption{Maximum, mean, and standard deviation of joint torques per gait cycle (reward: Feet Air Time, weight: 0.0)}
+    \label{fig:Maximum, mean, and standard deviation of joint torques per gait cycle (reward: Feet Air Time, weight: 0.0)}
 \end{figure}
 
 \begin{figure}[H]
   \centering
  \includegraphics[keepaspectratio, scale=0.4]
       {images/g1_flat_feet_air_time/10/CycleStats_Torques.png}
-      \caption{Maximum, mean, and standard deviation of joint angular velocity per gait cycle (reward: Feet Air Time, weight: 1.0)}
-    \label{fig:Maximum, mean, and standard deviation of joint angular velocity per gait cycle (reward: Feet Air Time, weight: 1.0)}
+      \caption{Maximum, mean, and standard deviation of joint torques per gait cycle (reward: Feet Air Time, weight: 1.0)}
+    \label{fig:Maximum, mean, and standard deviation of joint torques per gait cycle (reward: Feet Air Time, weight: 1.0)}
 \end{figure}
 
 \begin{figure}[H]
   \centering
  \includegraphics[keepaspectratio, scale=0.43]
       {images/g1_flat_feet_air_time/0/CycleStats_Velocities.png}
- \caption{Maximum, mean, and standard deviation of joint angular velocity per gait cycle (reward: Feet Air Time, weight: 0.0)}
- \label{Fig:Maximum, mean, and standard deviation of joint angular velocity per gait cycle (reward: Feet Air Time, weight: 0.0)}
+ \caption{Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: Feet Air Time, weight: 0.0)}
+ \label{Fig:Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: Feet Air Time, weight: 0.0)}
 \end{figure}
 
 \begin{figure}[H]
@@ -141,71 +116,79 @@ Fig. \ref{fig:Maximum, mean, and standard deviation of joint angular velocity pe
 \end{figure}
 
 \section{DOF Joint Limitsの影響}
-本節では，\textbf{DOF Joint Limits}（関節可動域制限に対するペナルティ）の影響について議論する．
-以下の図は，DOF Joint Limitsのパラメータを $0.0$，$-0.6$，$-1.0$ と設定した際の，左足の関節トルク，角速度，および床反力を示したものである．
-グラフより，ペナルティの重みが増加するにつれて実質的な可動域が制限されたため，ankle\_roll のトルクと角速度は減少した．
-一方で，ankle\_pitch に関しては顕著な変化は見られなかった．
-また床反力の推移を確認すると，ペナルティが増加するほど着地時のピーク波形が変化し，徐々に先鋭化している（衝撃が鋭くなっている）傾向が確認された．
+本節では，\textbf{DOF Joint Limits}（関節可動域制限に対するペナルティ，対象：Ankle）の重みを[0.0, -0.1, ..., -1.0]のように変化させた場合の影響について述べる．
+Fig. \ref{Fig:Ground reaction force of walking gait (reward: DOF Joint Limits, weight: 0.0)}〜\ref{Fig:Ground reaction force of walking gait (reward: DOF Joint Limits, weight: -1.0)}は重みを0.0（無効化），-0.6，-1.0（最大）にした際の床反力，
+Fig. \ref{fig:Maximum, mean, and standard deviation of joint torques per gait cycle (reward: DOF Joint Limits, weight: 0.0)}，\ref{fig:Maximum, mean, and standard deviation of joint torques per gait cycle (reward: DOF Joint Limits, weight: -1.0)}は重みを0.0，-1.0とした際の1歩行周期における各関節のトルク，
+Fig. \ref{Fig:Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: DOF Joint Limits, weight: 0.0)}，\ref{Fig:Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: DOF Joint Limits, weight: -1.0)}は同様に各関節の角速度の最大値，平均値，標準偏差を示したものである．
+実験の結果，ペナルティの重みが増加するにつれて，Ankle\_Jointのトルクおよび角速度が顕著に減少する傾向が確認された．これは，学習器が可動域制限のペナルティを回避するために，足首関節の駆動を最小限に抑える歩行を獲得した結果である．
+一方で，床反力の推移を確認すると，重みの増加に伴い着地時のピーク値が増大していることがわかる．物理的な観点から考察すると，通常，足首関節は着地時において受動的なコンプライアンス（柔軟性）を発揮し，地面からの衝撃を吸収するダンパーの役割を担う．しかし，本設定では可動域制限が厳しく課されたことで，ロボットは足首を硬く固定するような動作を余儀なくされた．その結果，着地衝撃を関節の動きで逃がすことができず，運動エネルギーが直接的に高い床反力として現れたと考えられる．
+このことから，関節保護を目的とした過度な可動域制限は，衝撃吸収能力の欠如を招き，かえって機体への衝撃負荷を高めるトレードオフの関係にあることが示唆された．
 
 \begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_pos_limits/0/foot_force_plot.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_pos_limits/06/foot_force_plot.png}
-\end{minipage}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_pos_limits/10/foot_force_plot.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_pos_limits/0/Left_Torques.png}
-\end{minipage}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_pos_limits/06/Left_Torques.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_pos_limits/10/Left_Torques.png}
-\end{minipage}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_pos_limits/0/Left_Velocity.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_pos_limits/06/Left_Velocity.png}
-\end{minipage}
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_dof_pos_limits/0/foot_force_plot.png}
+ \caption{Ground reaction force of walking gait (reward: DOF Joint Limits, weight: 0.0)}
+ \label{Fig:Ground reaction force of walking gait (reward: DOF Joint Limits, weight: 0.0)}
 \end{figure}
 
 \begin{figure}[H]
   \centering
- \includegraphics[keepaspectratio, scale=0.3]
-      {images/g1_flat_dof_pos_limits/10/Left_Velocity.png}
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_dof_pos_limits/06/foot_force_plot.png}
+ \caption{Ground reaction force of walking gait (reward: DOF Joint Limits, weight: -0.6)}
+ \label{Fig:Ground reaction force of walking gait (reward: DOF Joint Limits, weight: -0.6)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_dof_pos_limits/10/foot_force_plot.png}
+ \caption{Ground reaction force of walking gait (reward: DOF Joint Limits, weight: -1.0)}
+ \label{Fig:Ground reaction force of walking gait (reward: DOF Joint Limits, weight: -1.0)}
+\end{figure}
+
+%トルクと角速度
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_dof_pos_limits/0/CycleStats_Torques.png}
+      \caption{Maximum, mean, and standard deviation of joint torques per gait cycle (reward: DOF Joint Limits, weight: 0.0)}
+    \label{fig:Maximum, mean, and standard deviation of joint torques per gait cycle (reward: DOF Joint Limits, weight: 0.0)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_dof_pos_limits/10/CycleStats_Torques.png}
+      \caption{Maximum, mean, and standard deviation of joint torques per gait cycle (reward: DOF Joint Limits, weight: -1.0)}
+    \label{fig:Maximum, mean, and standard deviation of joint torques per gait cycle (reward: DOF Joint Limits, weight: -1.0)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.43]
+      {images/g1_flat_dof_pos_limits/0/CycleStats_Velocities.png}
+ \caption{Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: DOF Joint Limits, weight: 0.0)}
+ \label{Fig:Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: DOF Joint Limits, weight: 0.0)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.43]
+      {images/g1_flat_dof_pos_limits/10/CycleStats_Velocities.png}
+ \caption{Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: DOF Joint Limits, weight: -1.0)}
+ \label{Fig:Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: DOF Joint Limits, weight: -1.0)}
 \end{figure}
 
 \section{Joint Deviation (Hip) の影響}
-本節では，\textbf{Joint Deviation (Hip)}（股関節の初期位置からの逸脱に対するペナルティ）について議論する．
-以下の図は，Joint Deviation (Hip) のパラメータを $0.0$，$ -1.0$ と設定した際の，左足の関節角速度および歩幅を示したものである．
-グラフより，ペナルティ（重み）の増加に伴い hip\_joint の動きが抑制され，主として knee（膝）や ankle（足首）の関節を利用して歩行する傾向が見られた．
-その結果，歩行周期が短縮され（ハイピッチになり），歩幅の小さい小刻みな歩行動作が確認された．
+本節では，\textbf{Joint Deviation (Hip)}（股関節の初期位置からの逸脱に対するペナルティ）重みを[0.0, -0.1, ...，-1.0]のように変化させた場合の影響について述べる．
+Fig. \ref{Fig:Left foot angular velocity of policy trained with (reward: Joint Deviation (Hip), weight: 0.0)}〜Fig. \ref{Fig: Stride length analysis (reward: Joint Deviation (Hip), weight: -1.0)}は，\textbf{Joint Deviation (Hip)}の重みを$0.0, -1.0$と設定した際の，左足の関節角速度および歩幅（ストライド）の推移を示したものである．
+実験の結果，ペナルティの重み（絶対値）が増加するに伴い，Hip joint（股関節）の角速度および可動範囲が顕著に抑制される傾向が確認された．これに伴い，ロボットはHipの運動不足分をKnee（膝）やAnkle（足首）の駆動によって補う，いわゆる代償動作を用いて歩行を継続する様子が見られた（Fig. \ref{Fig:Walking using knees and ankles}）．
+物理的な観点から考察すると，脚移動において股関節は脚全体の振り出し（スイング動作）の起点となるため，この可動域制限は脚先軌道の振幅，すなわち歩幅の物理的な縮小に直結する．
+本実験では，股関節の制限により歩幅が強制的に減少したため，目標速度を維持するために歩行周波数を増大させる歩行がとられたと解釈できる．
+その結果として，観測されたような歩行周期の短縮および，小刻みな歩行動作が生成されたと考えられる．
+
 \begin{figure}[H]
   \centering
  \includegraphics[keepaspectratio, scale=0.08]
@@ -214,37 +197,50 @@ Fig. \ref{fig:Maximum, mean, and standard deviation of joint angular velocity pe
  \label{Fig:Walking using knees and ankles}
 \end{figure}
 
+%角速度
 \begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_joint_deviation_hip/0/Left_Velocity.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_joint_deviation_hip/10/Left_Velocity.png}
-\end{minipage}
+  \centering
+ \includegraphics[keepaspectratio, scale=0.43]
+      {images/g1_flat_joint_deviation_hip/0/Left_Velocity.png}
+ \caption{Left foot angular velocity of policy trained with (reward: Joint Deviation (Hip), weight: 0.0)}
+ \label{Fig:Left foot angular velocity of policy trained with (reward: Joint Deviation (Hip), weight: 0.0)}
 \end{figure}
 
 \begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_joint_deviation_hip/0/stride_length_analysis.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_joint_deviation_hip/10/stride_length_analysis.png}
-\end{minipage}
+  \centering
+ \includegraphics[keepaspectratio, scale=0.43]
+      {images/g1_flat_joint_deviation_hip/10/Left_Velocity.png}
+ \caption{Left foot angular velocity of policy trained with (reward: Joint Deviation (Hip), weight: -1.0)}
+ \label{Fig:Left foot angular velocity of policy trained with (reward: Joint Deviation (Hip), weight: -1.0)}
 \end{figure}
 
+
+%歩幅
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.43]
+      {images/g1_flat_joint_deviation_hip/0/stride_length_analysis.png}
+ \caption{Stride length analysis (reward: Joint Deviation (Hip), weight: 0.0)}
+ \label{Fig: Stride length analysis (reward: Joint Deviation (Hip), weight: 0.0)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.43]
+      {images/g1_flat_joint_deviation_hip/10/stride_length_analysis.png}
+ \caption{Stride length analysis (reward: Joint Deviation (Hip), weight: -1.0)}
+ \label{Fig: Stride length analysis (reward: Joint Deviation (Hip), weight: -1.0)}
+\end{figure}
 
 \section{Lin Vel Z L2の影響}
-本節では，\textbf{Lin Vel Z L2}（重心鉛直速度に対するペナルティ項）について議論する．以下の図は，Lin Vel Z L2のパラメータ（重み係数）を 0.0 および −1.0 と設定した際の，重心位置と足上げ高さの推移を示したものである．
-本実験の評価指標全体においては顕著な変化は見られなかったが，ペナルティ項の導入により重心位置の上下動が抑制されていることが確認できる．
-これは，歩行動作に必然的に伴う重心の上下動に対して，ペナルティが過度な動きを制限するように作用したためであると考えられる．
+本節では，\textbf{Lin Vel Z L2}（重心鉛直速度に対するペナルティ）の重みを[0.0, -0.1, ..., -1.0]のように変化させた場合の影響について述べる．
+Fig. \ref{Fig:Side view of walking motion trajectories (reward: Lin Vel Z L2, weight: 0.0)}，\ref{Fig:Side view of walking motion trajectories (reward: Lin Vel Z L2, weight: 1.0)}は重みを0.0, -1.0にした際の重心位置と足上げ高さを示したものである．
+実験の結果，ペナルティの重みが増加するにつれて，重心軌跡の上下動が抑制されていることが確認された．また，この重心の平坦化に伴い，遊脚時の高さを低く保つ歩容が獲得された．
+物理的な観点から考察すると，通常の歩行動作は倒立振子のように重心の位置エネルギーと運動エネルギーを交換しながら進むため，必然的に重心の上下動を伴う．しかし，本設定では鉛直速度 $v_z$ に強いペナルティが課されたため，学習器は重心高さを一定に保つ行動を強いられた．
+重心を上下させずに足を前に運ぶためには，床面を蹴って体を持ち上げる動作を排除する必要がある．その結果，ロボットは鉛直方向への運動量変化を最小限に抑えるために，足を高く上げることを放棄し，地面すれすれを移動させる「すり足」に近い歩容を選択したと解釈できる．
+なお，この歩容の変化にも関わらず，本実験で用いた他の評価指標（エネルギー効率や転倒率など）においては統計的に有意な悪化は見られなかった．これは，平坦な環境においては，必ずしも足を高く上げることが歩行の必須条件ではなく，重心を安定させるこの戦略が局所的な最適解として機能したためと考えられる．
 
-Fig. \ref{Fig:Side view of walking motion trajectories (reward: Lin Vel Z L2, weight: 0.0)}，\ref{Fig:Side view of walking motion trajectories (reward: Lin Vel Z L2, weight: 1.0)}
 \begin{figure}[H]
   \centering
  \includegraphics[keepaspectratio, scale=0.4]
@@ -262,9 +258,16 @@ Fig. \ref{Fig:Side view of walking motion trajectories (reward: Lin Vel Z L2, we
 \end{figure}
 
 \section{DOF Acc L2の影響}
-本節では，\textbf{DOF Acc L2}（関節加速度に対するペナルティ項）について議論する．以下の図は，DOF Acc L2のパラメータを 0.0，$ -5.0 \times 10^{-7}，-5.0 \times 10^{-6}$と設定した際の，左足の関節トルクおよび角速度を示したものである．
-グラフより，ペナルティの重みが増加するにつれて，hip\_pitchとknee\_pitch の角速度が抑制されていることがわかる．また Fig. \ref{fig:totalenergy_flat_dof} より，ペナルティが増えるほど歩行時の総仕事量は減少した．
-ただし，$-5.0 \times 10^{-6}$の設定では直進性が損なわれ，途中で大きく湾曲する挙動が見られた．なお，さらに値を大きくした$-5.0 \times 10^{-5}$では，過度な制約によりロボットは動作しなくなった．
+本節では，\textbf{DOF Acc L2}（関節加速度に対するペナルティ，対象：Hip，Knee）の重みを[0.0，$ -1.0 \times 10^{-7}，-5.0 \times 10^{-6}$]のように変化させた場合の影響について述べる．
+以下のFig. \ref{fig:Maximum, mean, and standard deviation of joint torques per gait cycle (reward: DOF Acc L2, weight: 0.0)}〜\ref{fig:Maximum, mean, and standard deviation of joint torques per gait cycle (reward: DOF Acc L2, weight: -5.010-6)}，
+Fig. \ref{Fig:Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: DOF Acc L2, weight: 0.0)}〜\ref{Fig:Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: DOF Acc L2, weight: -5.010-6)}は[0.0，$ -1.0 \times 10^{-7}，-5.0 \times 10^{-6}$]とした際の1歩行周期における各関節のトルクと角速度の最大値，平均値，標準偏差を示したものである．
+Fig. \ref{fig:totalenergy_flat_dof}は\textbf{DOF Acc L2}の重みを変化ごとの総仕事量，
+Fig. \ref{fig:(reward: DOF Acc L2, weight: -5.010-6)}は重みを$-5.0 \times 10^{-6}$の場合の歩行の軌跡を示す．
+実験の結果，ペナルティの重み（絶対値）が増加するにつれて，Hip\_pitchおよびKnee\_pitchの角速度が抑制され，動作が平滑化される傾向が確認された．これに伴い，Fig. \ref{fig:totalenergy_flat_dof}に示すように歩行時の総仕事量は減少した．
+物理的な観点から考察すると，関節加速度の抑制は，急激な加減速動作の排除を意味する．運動方程式 $F=ma$（回転系では $\tau=I\alpha$）に従えば，加速度（$\alpha$）の低減は動作に必要な慣性力を小さく抑えることにつながるため，結果としてアクチュエータが発揮すべきトルクおよび消費エネルギーが低減されたと解釈できる．
+しかしながら，重みを$-5.0 \times 10^{-6}$まで強めた設定では，直進性が損なわれ，経路が大きく湾曲する挙動が確認された．
+これは，加速度への過度なペナルティが，歩行の安定化に必要な角速度を阻害したためと考えられる．直進を維持する角速度が足りず，方位誤差が累積し湾曲に至ったと推測される．
+なお，さらに重みを大きくした$-5.0 \times 10^{-5}$の設定では，ロボットは動作を停止した．これは，動作すること自体のコスト（加速度ペナルティ）が，移動によって得られる報酬（速度追従報酬）を上回ったため，学習器が動かないという行動を最適解として選択した結果である．
 
 \begin{figure}[H]
   \centering
@@ -274,122 +277,140 @@ Fig. \ref{Fig:Side view of walking motion trajectories (reward: Lin Vel Z L2, we
  \label{Fig:Gait learned with a penalty of -5.0106}
 \end{figure}
 
+%トルク
 \begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_acc_l2/0/Left_Torques.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_acc_l2/0/Left_Velocity.png}
-\end{minipage}
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_dof_acc_l2/0/CycleStats_Torques.png}
+      \caption{Maximum, mean, and standard deviation of joint torques per gait cycle (reward: DOF Acc L2, weight: 0.0)}
+    \label{fig:Maximum, mean, and standard deviation of joint torques per gait cycle (reward: DOF Acc L2, weight: 0.0)}
 \end{figure}
 
 \begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_acc_l2/17/Left_Torques.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_acc_l2/17/Left_Velocity.png}
-\end{minipage}
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_dof_acc_l2/17/CycleStats_Torques.png}
+      \caption{Maximum, mean, and standard deviation of joint torques per gait cycle (reward: DOF Acc L2, weight: $-1.0 \times 10^{-7}$)}
+    \label{fig:Maximum, mean, and standard deviation of joint torques per gait cycle (reward: DOF Acc L2, weight: -1.0107)}
 \end{figure}
 
 \begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_acc_l2/57/Left_Torques.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_acc_l2/57/Left_Velocity.png}
-\end{minipage}
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_dof_acc_l2/56/CycleStats_Torques.png}
+      \caption{Maximum, mean, and standard deviation of joint torques per gait cycle (reward: DOF Acc L2, weight: $-5.0 \times 10^{-6}$)}
+    \label{fig:Maximum, mean, and standard deviation of joint torques per gait cycle (reward: DOF Acc L2, weight: -5.010-6)}
+\end{figure}
+
+%角速度
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.43]
+      {images/g1_flat_dof_acc_l2/0/CycleStats_Velocities.png}
+ \caption{Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: DOF Acc L2, weight: 0.0)}
+ \label{Fig:Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: DOF Acc L2, weight: 0.0)}
 \end{figure}
 
 \begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_acc_l2/56/Left_Torques.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_acc_l2/56/Left_Velocity.png}
-\end{minipage}
+  \centering
+ \includegraphics[keepaspectratio, scale=0.43]
+      {images/g1_flat_dof_acc_l2/17/CycleStats_Velocities.png}
+ \caption{Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: DOF Acc L2, weight: $-1.0 \times 10^{-7}$)}
+ \label{Fig:Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: DOF Acc L2, weight: -1.0107)}
 \end{figure}
 
 \begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_acc_l2/56/footprint_2d.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_acc_l2/57/footprint_2d.png}
-\end{minipage}
+  \centering
+ \includegraphics[keepaspectratio, scale=0.43]
+      {images/g1_flat_dof_acc_l2/56/CycleStats_Velocities.png}
+ \caption{Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: DOF Acc L2, weight: $-5.0 \times 10^{-6}$)}
+ \label{Fig:Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: DOF Acc L2, weight: -5.010-6)}
 \end{figure}
 
-
-\section{DOF Torques L2の影響} 本節では，\textbf{DOF Torques L2}（関節トルクに対するペナルティ項）について議論する． 以下の図は，DOF Torques L2のパラメータを 0.0，$ -1.0 \times 10^{-6}， -1.0 \times 10^{-5}$ と設定した際の，左足の関節トルクおよび角速度，歩幅を示したものである．
-グラフをより，ペナルティの重みが増加するにつれて関節トルクはわずかに抑制されているものの，DOF Acc L2の場合と比較するとその変化は小さい．一方，Fig. \ref{fig:totalenergy_flat_dof} より，（総仕事量は）DOF Acc L2と同様に減少傾向にあることが確認できる．
-また，DOF Torques L2のペナルティが大きくなるほど，歩行周期が遅くなり，歩数が減少する傾向が見られた．ただし，$-2.0 \times 10^{-5}$のように過剰なペナルティを与えると，学習が破綻してしまう現象も確認された．
-
+%仕事量
 \begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_torques_l2/0/Left_Torques.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_torques_l2/0/Left_Velocity.png}
-\end{minipage}
+  \centering
+ \includegraphics[keepaspectratio, scale=0.5]
+      {images/png/totalenergy_dof.png}
+      \caption{Total Energy by DOF Acc L2 and DOF Torques parameters}
+    \label{fig:totalenergy_flat_dof}
 \end{figure}
 
 \begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_torques_l2/15/Left_Torques.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_torques_l2/15/Left_Velocity.png}
-\end{minipage}
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {/home/harukiogawa/thesis_template/images/g1_flat_dof_acc_l2/56/footprint_2d.png}
+      \caption{Foot print(reward: DOF Acc L2, weight: $-5.0 \times 10^{-6}$)}
+    \label{fig:(reward: DOF Acc L2, weight: -5.010-6)}
+\end{figure}
+
+\section{DOF Torques L2の影響} 
+本節では，\textbf{DOF Torques L2}（関節トルクに対するペナルティ，対象：Hip，Knee）の重みを[0.0，$ -1.0 \times 10^{-6}，-1.0 \times 10^{-5}$]のように変化させた場合の影響について述べる．
+以下のFig. \ref{fig:Maximum, mean, and standard deviation of joint torques per gait cycle (reward: DOF Torques L2, weight: 0.0)}〜\ref{fig:Maximum, mean, and standard deviation of joint torques per gait cycle (reward: DOF Torques L2, weight: -1.010-5)}，
+Fig. \ref{Fig:Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: DOF Torques L2, weight: 0.0)}〜\ref{Fig:Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: DOF Torques L2, weight: -1.010-5)}は[0.0，$ -1.0 \times 10^{-6}，-1.0 \times 10^{-5}$]とした際の1歩行周期における各関節のトルクと角速度の最大値，平均値，標準偏差を示したものである．
+実験結果として，重みの増加に伴い関節トルクおよび総仕事量の減少傾向が確認された．しかし，前節の\textbf{DOF Acc L2}（加速度ペナルティ）による変化と比較すると，その減少幅は限定的であった．
+物理的な観点から考察すると，関節トルクには運動を生み出すトルク（動的成分）と自重を支えるトルク（静的成分）の二つの役割がある．加速度は等速運動を行うことでゼロに近づけることが可能だが，トルクに関しては，ロボットが転倒せずに姿勢を維持する限り，重力に抗するためのベースライン（重力補償トルク）が物理的な下限値として存在する．
+そのため，学習器がどれほど効率化を図ろうとも，このベースラインを下回ることはできず，結果として総仕事量に現れる変化が\textbf{DOF Acc L2}の場合よりも小さくなったと解釈できる．
+なお，重みを$-2.0 \times 10^{-5}$まで強めた設定では，学習が破綻する現象が確認された．これは，ペナルティが過大になり，自重を支えるために最低限必要なトルクさえも許容されなくなったためである．その結果，学習器にとって歩行して報酬を得るメリットよりも，脱力してペナルティを回避する（転倒する）メリットが上回り，歩行動作の獲得に至らなかったと考えられる．
+
+%トルク
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_dof_torques_l2/0/CycleStats_Torques.png}
+      \caption{Maximum, mean, and standard deviation of joint torques per gait cycle (reward: DOF Torques L2, weight: 0.0)}
+    \label{fig:Maximum, mean, and standard deviation of joint torques per gait cycle (reward: DOF Torques L2, weight: 0.0)}
 \end{figure}
 
 \begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_torques_l2/16/Left_Torques.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_torques_l2/16/Left_Velocity.png}
-\end{minipage}
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_dof_torques_l2/16/CycleStats_Torques.png}
+      \caption{Maximum, mean, and standard deviation of joint torques per gait cycle (reward: DOF Torques L2, weight: $-1.0 \times 10^{-6}$)}
+    \label{fig:Maximum, mean, and standard deviation of joint torques per gait cycle (reward: DOF Torques L2, weight: -1.0106)}
 \end{figure}
 
 \begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_torques_l2/15/stride_length_analysis.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_dof_torques_l2/16/stride_length_analysis.png}
-\end{minipage}
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_dof_torques_l2/15/CycleStats_Torques.png}
+      \caption{Maximum, mean, and standard deviation of joint torques per gait cycle (reward: DOF Torques L2, weight: $-1.0 \times 10^{-5}$)}
+    \label{fig:Maximum, mean, and standard deviation of joint torques per gait cycle (reward: DOF Torques L2, weight: -1.010-5)}
 \end{figure}
 
-\section{Feet Slideの影響} 本節では，\textbf{Feet Slide}（接地時の滑り抑制）について議論する．以下の図は，Feet Slideのパラメータを0.0，-0.8，-1.0と設定した際の，左足の関節トルク，角速度，および床反力を示したものである．
-グラフより，ペナルティの重みが増加するにつれて，knee\_pitch の関節トルクと角速度，および hip\_yaw の角速度に増加傾向が見られる．また歩容に関しては，ペナルティが大きくなるほど地面を強く叩きつけるような挙動（着地衝撃の増加）が確認された．
-Fig. \ref{fig:totalenergy_flat_5} より，ペナルティ係数が-0.8および-1.0の設定では，総仕事量が増加していることがわかる．
+%角速度
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.43]
+      {images/g1_flat_dof_torques_l2/0/CycleStats_Velocities.png}
+ \caption{Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: DOF Torques L2, weight: 0.0)}
+ \label{Fig:Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: DOF Torques L2, weight: 0.0)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.43]
+      {images/g1_flat_dof_torques_l2/16/CycleStats_Velocities.png}
+ \caption{Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: DOF Torques L2, weight: $-1.0 \times 10^{-6}$)}
+ \label{Fig:Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: DOF Torques L2, weight: -1.0106)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.43]
+      {images/g1_flat_dof_torques_l2/15/CycleStats_Velocities.png}
+ \caption{Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: DOF Torques L2, weight: $-1.0 \times 10^{-5}$)}
+ \label{Fig:Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: DOF Torques L2, weight: -1.010-5)}
+\end{figure}
+
+\section{Feet Slideの影響}
+本節では，\textbf{Feet Slide}（接地時の足の滑りに対するペナルティ）の重みを$[0.0, -1.0]$と変化させた際の影響について述べる．
+Fig. \ref{fig:Maximum, mean, and standard deviation of joint torques per gait cycle (reward: Feet Slide, weight: 0.0)}およびFig. \ref{fig:Maximum, mean, and standard deviation of joint torques per gait cycle (reward: Feet Slide, weight: -1.0)}は，各重み設定における左足の関節トルクの最大値，平均値，標準偏差を，Fig. \ref{Fig:Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: Feet Slide, weight: 0.0)}およびFig. \ref{Fig:Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: Feet Slide, weight: -1.0)}は角速度を示したものである．
+また，Fig. \ref{Fig:Ground reaction force of walking gait (reward: Feet Slide, weight: 0.0)}およびFig. \ref{Fig:Ground reaction force of walking gait (reward: Feet Slide, weight: -1.0)}に床反力の推移を，Fig. \ref{fig:totalenergy_flat_5}に重みごとの総仕事量の変化を示す．なお，Fig. \ref{Fig:Walking with strong impact on the ground}は重みが大きい場合に観察された特徴的な着地挙動を示したものである．
+実験の結果，ペナルティの重みが増加するにつれて，Knee\_pitchのトルクと角速度に顕著な増加傾向が確認された．
+歩容に関しては，ペナルティが大きくなるほど地面を強く叩きつけるような挙動へと変化し，これに伴いFig. \ref{fig:totalenergy_flat_5}に示す通り総仕事量が増加した．
+物理的な観点から考察すると，足先が地面で滑らない条件は，接地点におけるせん断力が最大静止摩擦力よりも小さいこと（$F \le \mu N$）である．ここで $\mu$ は摩擦係数，$N$ は垂直抗力である．
+学習器は滑り（せん断方向の移動）を厳しく制限されたため，滑りが発生するリスクを回避するために，着地速度を上げて垂直抗力 $N$ を瞬発的に増大させる行動をとったと考えられる．すなわち，地面を強く踏みつけ，摩擦力の許容限界を引き上げることで滑りを物理的に阻止しようとした結果，関節負荷とエネルギー消費が増大する歩容が形成されたと解釈できる．
 
 \begin{figure}[H]
   \centering
@@ -399,89 +420,123 @@ Fig. \ref{fig:totalenergy_flat_5} より，ペナルティ係数が-0.8および
  \label{Fig:Walking with strong impact on the ground}
 \end{figure}
 
+%トルク
 \begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_slide/0/Left_Torques.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_slide/0/Left_Velocity.png}
-\end{minipage}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_slide/06/Left_Torques.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_slide/06/Left_Velocity.png}
-\end{minipage}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_slide/10/Left_Torques.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_slide/10/Left_Velocity.png}
-\end{minipage}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_slide/06/foot_force_plot.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_feet_slide/10/foot_force_plot.png}
-\end{minipage}
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_feet_slide/0/CycleStats_Torques.png}
+      \caption{Maximum, mean, and standard deviation of joint torques per gait cycle (reward: Feet Slide, weight: 0.0)}
+    \label{fig:Maximum, mean, and standard deviation of joint torques per gait cycle (reward: Feet Slide, weight: 0.0)}
 \end{figure}
 
 \begin{figure}[H]
   \centering
- \includegraphics[keepaspectratio, scale=0.3]
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_feet_slide/10/CycleStats_Torques.png}
+      \caption{Maximum, mean, and standard deviation of joint torques per gait cycle (reward: Feet Slide, weight: -1.0)}
+    \label{fig:Maximum, mean, and standard deviation of joint torques per gait cycle (reward: Feet Slide, weight: -1.0)}
+\end{figure}
+
+%角速度
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.43]
+      {images/g1_flat_feet_slide/0/CycleStats_Velocities.png}
+ \caption{Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: Feet Slide, weight: 0.0)}
+ \label{Fig:Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: Feet Slide, weight: 0.0)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.43]
+      {images/g1_flat_feet_slide/10/CycleStats_Velocities.png}
+ \caption{Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: Feet Slide, weight: -1.0)}
+ \label{Fig:Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: Feet Slide, weight: -1.0)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_feet_slide/06/foot_force_plot.png}
+ \caption{Ground reaction force of walking gait (reward: Feet Slide, weight: 0.0)}
+ \label{Fig:Ground reaction force of walking gait (reward: Feet Slide, weight: 0.0)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_feet_slide/10/foot_force_plot.png}
+ \caption{Ground reaction force of walking gait (reward: Feet Slide, weight: -1.0)}
+ \label{Fig:Ground reaction force of walking gait (reward: Feet Slide, weight: -1.0)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.5]
+      {images/png/totalenergy_5.png}
+      \caption{Total Energy by DOF Joint Limits and Joint deviation(hip), Lin Vel Z L2, Feet Slide, Flat orientation L2 parameters}
+    \label{fig:totalenergy_flat_5}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
       {images/g1_flat_feet_slide/10/trajectory_side_view.png}
+ \caption{Side view of walking motion trajectories (reward: Feet Slide, weight: 1.0)}
+ \label{Fig:Side view of walking motion trajectories (reward: Feet Slide, weight: 1.0)}
 \end{figure}
 
-\section{Flat orientationの影響}
-本節は，\textbf{Flat orientation}について議論する．以下の図は，Feet Slideのパラメータを0.0と設定した際の，左足の関節トルク，角速度，胴体の姿勢偏差を示したものである．
-グラフより，ペナルティが 0.0（無効）の場合，ロボットは胴体を大きく後傾させて（上へ反らせて）歩行しており，その姿勢を維持するためにhip\_roll のトルクが増加したことがわかる．
-実際にペナルティなしで歩行した際の様子を Fig. （様子の画像を貼る）に示す．一方，ペナルティの重みが増加した場合は，胴体の姿勢偏差が低減されていることが確認できる．
-
-0の写真をはる
+\section{Flat Orientationの影響}
+本節は，\textbf{Flat orientation}()の重みを[0.0, -0.1, ..., -1.0]のように変化させた場合の影響について述べる．
+Fig. \ref{fig:Maximum, mean, and standard deviation of joint torques per gait cycle (reward: Flat Orientation, weight: 0.0)}，\ref{Fig:Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: Flat Orientation, weight: 0.0)}
+重みが0とした際の1 歩行周期における各関節のトルク，角速度の最大値，平均値，標準偏差を示したものである．
+Fig. \ref{fig:Stability analysis (reward: Flat Orientation, weight: 0.0)}，\ref{fig:Stability analysis (reward: Flat Orientation, weight: -1.0)}は重みを0.0と-1.0の胴体の姿勢偏差を示したものである．
+実験結果より，ペナルティが 0.0（無効）の場合，ロボットは胴体を大きく後傾させて歩行しており，その姿勢を維持するためにhip\_roll のトルクが増加したことがわかる．
+実際にペナルティなしで歩行した際の様子を Fig. \ref{Fig:Walking with torso facing up}に示す．一方，ペナルティの重みが増加した場合は，胴体の姿勢偏差が低減されていることが確認できる．
+胴体が後傾した姿勢では，上半身の重心位置が股関節の直上から大きく外れることになる．これにより，重力に起因する回転モーメントが常に発生し続けるため，ロボットはその姿勢を保持するために無駄な抗力（保持トルク）を出し続けなければならない．
+特にHip\_roll（股関節のロール軸）のトルク増加は，後傾姿勢によって左右のバランス保持が困難になり，体幹の側方安定性を確保するために過剰な制御入力が必要となった結果であると解釈できる．
+すなわち，Flat orientationペナルティは，単に姿勢を良くするだけでなく，重心を支持脚の直上に配置させることで，姿勢維持に必要な無効トルクを削減する物理的な効果を持っているといえる．
 
 \begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_flat_orientation_l2/0/Left_Torques.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_flat_orientation_l2/0/Left_Velocity.png}
-\end{minipage}
+  \centering
+ \includegraphics[keepaspectratio, scale=0.08]
+      {images/png/orientation.png}
+ \caption{Walking with torso facing up}
+ \label{Fig:Walking with torso facing up}
 \end{figure}
 
 \begin{figure}[H]
-\centering
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_flat_orientation_l2/0/stability_analysis.png}
-\end{minipage}
-\begin{minipage}[b]{0.49\columnwidth}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{images/g1_flat_flat_orientation_l2/10/stability_analysis.png}
-\end{minipage}
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_flat_orientation_l2/0/CycleStats_Torques.png}
+      \caption{Maximum, mean, and standard deviation of joint torques per gait cycle (reward: Flat Orientation, weight: 0.0)}
+    \label{fig:Maximum, mean, and standard deviation of joint torques per gait cycle (reward: Flat Orientation, weight: 0.0)}
 \end{figure}
+
+%角速度
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.43]
+      {images/g1_flat_flat_orientation_l2/0/CycleStats_Velocities.png}
+ \caption{Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: Flat Orientation, weight: 0.0)}
+ \label{Fig:Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: Flat Orientation, weight: 0.0)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_flat_orientation_l2/0/stability_analysis.png}
+      \caption{Stability analysis (reward: Flat Orientation, weight: 0.0)}
+    \label{fig:Stability analysis (reward: Flat Orientation, weight: 0.0)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.4]
+      {images/g1_flat_flat_orientation_l2/0/stability_analysis.png}
+      \caption{Stability analysis (reward: Flat Orientation, weight: -1.0)}
+    \label{fig:Stability analysis (reward: Flat Orientation, weight: -1.0)}
+\end{figure}
+
 
 \newpage
