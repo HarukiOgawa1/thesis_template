@@ -18,7 +18,7 @@
   \item DOF Acc L2(Hip, Knee)             ：関節加速度の抑制 $[0.0, -1.0 \times 10^{-5}, -1.0 \times 10^{-6}, -5.0 \times 10^{-6}, -1.0 \times 10^{-7},  -2.5 \times 10^{-7}, -5.0 \times 10^{-7},  -7.5 \times 10^{-7}, -1.0 \times 10^{-8}, -5.0 \times 10^{-8}]$ \textbf{（default: $-1.0 \times 10^{-7}$）}
   \item DOF Torques L2(Hip, Knee)         ：関節トルクの抑制 $[0.0, -2.0 \times 10^{-7}, -5.0 \times 10^{-7}, -1.0 \times 10^{-6}, -2.0 \times 10^{-6}, -5.0 \times 10^{-6}, -1.0 \times 10^{-5}]$ \textbf{（default: $-2.0 \times 10^{-6}$）}
   \item Feet Slide              ：接地時の滑り抑制 $[0.0, -0.1, -0.2, -0.4, -0.6, -0.8, -1.0]$ \textbf{（default: -0.1）}
-  \item Flat Orientation       ：ベースリンクの水平維持 $[0.0, -0.1, -0.2, -0.4, -0.6, -0.8, -1.0]$ \textbf{（default: -1.0）}
+  \item Flat Orientation       ：胴体の水平維持を促す $[0.0, -0.1, -0.2, -0.4, -0.6, -0.8, -1.0]$ \textbf{（default: -1.0）}
 \end{itemize}
 
 
@@ -61,7 +61,7 @@
 のベンチマーク手法を参考に，運動性能，動作安定性，およびエネルギー効率の観点から以下の7つの指標を選定した．
 
 \begin{itemize}
-    \item \textbf{歩行速度追従率 (Velocity Tracking)} \\
+    \item \textbf{歩行速度追従率} \\
     ロボットが目標とする指令速度通りに移動できているかを評価する最も基本的な指標である．目標速度 $\mathbf{v}_{cmd}$ と実際のベースリンク速度 $\mathbf{v}_{real}$を比較，計測する．
 
     \item \textbf{胴体の姿勢偏差} \\

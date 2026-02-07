@@ -263,11 +263,11 @@ Fig. \ref{Fig:Side view of walking motion trajectories (reward: Lin Vel Z L2, we
 Fig. \ref{Fig:Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: DOF Acc L2, weight: 0.0)}〜\ref{Fig:Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: DOF Acc L2, weight: -5.010-6)}は[0.0，$ -1.0 \times 10^{-7}，-5.0 \times 10^{-6}$]とした際の1歩行周期における各関節のトルクと角速度の最大値，平均値，標準偏差を示したものである．
 Fig. \ref{fig:totalenergy_flat_dof}は\textbf{DOF Acc L2}の重みを変化ごとの総仕事量，
 Fig. \ref{fig:(reward: DOF Acc L2, weight: -5.010-6)}は重みを$-5.0 \times 10^{-6}$の場合の歩行の軌跡を示す．
-実験の結果，ペナルティの重み（絶対値）が増加するにつれて，Hip\_pitchおよびKnee\_pitchの角速度が抑制され，動作が平滑化される傾向が確認された．これに伴い，Fig. \ref{fig:totalenergy_flat_dof}に示すように歩行時の総仕事量は減少した．
+実験の結果，ペナルティの重みが増加するにつれて，Hip\_pitchおよびKnee\_pitchの角速度が抑制され，動作が平滑化される傾向が確認された．これに伴い，Fig. \ref{fig:totalenergy_flat_dof}に示すように歩行時の総仕事量は減少した．
 物理的な観点から考察すると，関節加速度の抑制は，急激な加減速動作の排除を意味する．運動方程式 $F=ma$（回転系では $\tau=I\alpha$）に従えば，加速度（$\alpha$）の低減は動作に必要な慣性力を小さく抑えることにつながるため，結果としてアクチュエータが発揮すべきトルクおよび消費エネルギーが低減されたと解釈できる．
 しかしながら，重みを$-5.0 \times 10^{-6}$まで強めた設定では，直進性が損なわれ，経路が大きく湾曲する挙動が確認された．
 これは，加速度への過度なペナルティが，歩行の安定化に必要な角速度を阻害したためと考えられる．直進を維持する角速度が足りず，方位誤差が累積し湾曲に至ったと推測される．
-なお，さらに重みを大きくした$-5.0 \times 10^{-5}$の設定では，ロボットは動作を停止した．これは，動作すること自体のコスト（加速度ペナルティ）が，移動によって得られる報酬（速度追従報酬）を上回ったため，学習器が動かないという行動を最適解として選択した結果である．
+なお，さらに重みを大きくした$-5.0 \times 10^{-5}$の設定では，ロボットは動作を停止した．これは，動作すること自体のコスト（\textbf{DOF Acc L2}）が，移動によって得られる報酬（速度追従報酬）を上回ったため，学習器が動かないという行動を最適解として選択した結果である．
 
 \begin{figure}[H]
   \centering
@@ -487,15 +487,16 @@ Fig. \ref{fig:Maximum, mean, and standard deviation of joint torques per gait cy
 \end{figure}
 
 \section{Flat Orientationの影響}
-本節は，\textbf{Flat orientation}()の重みを[0.0, -0.1, ..., -1.0]のように変化させた場合の影響について述べる．
+本節は，\textbf{Flat orientation}(胴体の水平維持を促すペナルティ)の重みを[0.0, -0.1, ..., -1.0]のように変化させた場合の影響について述べる．
+Fig. \ref{Fig:Left foot angular velocity of policy trained with (reward: Flat Orientation, weight: 0.0)}，\ref{Fig:Left foot angular velocity of policy trained with (reward: Flat Orientation, weight: 0.0)}は重みを0.0と-1.0の左足トルクの時系列データであり，
 Fig. \ref{fig:Maximum, mean, and standard deviation of joint torques per gait cycle (reward: Flat Orientation, weight: 0.0)}，\ref{Fig:Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: Flat Orientation, weight: 0.0)}
 重みが0とした際の1 歩行周期における各関節のトルク，角速度の最大値，平均値，標準偏差を示したものである．
 Fig. \ref{fig:Stability analysis (reward: Flat Orientation, weight: 0.0)}，\ref{fig:Stability analysis (reward: Flat Orientation, weight: -1.0)}は重みを0.0と-1.0の胴体の姿勢偏差を示したものである．
-実験結果より，ペナルティが 0.0（無効）の場合，ロボットは胴体を大きく後傾させて歩行しており，その姿勢を維持するためにhip\_roll のトルクが増加したことがわかる．
+実験結果より，ペナルティが 0.0（無効）の場合，ロボットは胴体を大きく後傾させて歩行しており，その姿勢を維持するためにHip\_roll （股関節のロール軸）のトルクが増加したことがわかる．
 実際にペナルティなしで歩行した際の様子を Fig. \ref{Fig:Walking with torso facing up}に示す．一方，ペナルティの重みが増加した場合は，胴体の姿勢偏差が低減されていることが確認できる．
 胴体が後傾した姿勢では，上半身の重心位置が股関節の直上から大きく外れることになる．これにより，重力に起因する回転モーメントが常に発生し続けるため，ロボットはその姿勢を保持するために無駄な抗力（保持トルク）を出し続けなければならない．
-特にHip\_roll（股関節のロール軸）のトルク増加は，後傾姿勢によって左右のバランス保持が困難になり，体幹の側方安定性を確保するために過剰な制御入力が必要となった結果であると解釈できる．
-すなわち，Flat orientationペナルティは，単に姿勢を良くするだけでなく，重心を支持脚の直上に配置させることで，姿勢維持に必要な無効トルクを削減する物理的な効果を持っているといえる．
+特にHip\_rollのトルク増加は，後傾姿勢によって左右のバランス保持が困難になり，体幹の側方安定性を確保するために過剰な制御入力が必要となった結果であると解釈できる．
+すなわち，\textbf{Flat orientation}ペナルティは，単に姿勢を良くするだけでなく，重心を支持脚の直上に配置させることで，姿勢維持に必要な無効トルクを削減する物理的な効果を持っているといえる．
 
 \begin{figure}[H]
   \centering
@@ -503,6 +504,23 @@ Fig. \ref{fig:Stability analysis (reward: Flat Orientation, weight: 0.0)}，\ref
       {images/png/orientation.png}
  \caption{Walking with torso facing up}
  \label{Fig:Walking with torso facing up}
+\end{figure}
+
+%角速度時系列
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.43]
+      {images/g1_flat_flat_orientation_l2/0/Left_Torques.png}
+ \caption{Left foot angular velocity of policy trained with (reward: Flat Orientation, weight: 0.0)}
+ \label{Fig:Left foot angular velocity of policy trained with (reward: Flat Orientation, weight: 0.0)}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+ \includegraphics[keepaspectratio, scale=0.43]
+      {images/g1_flat_flat_orientation_l2/10/Left_Torques.png}
+ \caption{Left foot angular velocity of policy trained with (reward: Flat Orientation, weight: -1.0)}
+ \label{Fig:Left foot angular velocity of policy trained with (reward: Flat Orientation, weight: -1.0)}
 \end{figure}
 
 \begin{figure}[H]
@@ -522,6 +540,7 @@ Fig. \ref{fig:Stability analysis (reward: Flat Orientation, weight: 0.0)}，\ref
  \label{Fig:Maximum, mean, and standard deviation of joint angular velocities per gait cycle (reward: Flat Orientation, weight: 0.0)}
 \end{figure}
 
+
 \begin{figure}[H]
   \centering
  \includegraphics[keepaspectratio, scale=0.4]
@@ -533,7 +552,7 @@ Fig. \ref{fig:Stability analysis (reward: Flat Orientation, weight: 0.0)}，\ref
 \begin{figure}[H]
   \centering
  \includegraphics[keepaspectratio, scale=0.4]
-      {images/g1_flat_flat_orientation_l2/0/stability_analysis.png}
+      {images/g1_flat_flat_orientation_l2/10/stability_analysis.png}
       \caption{Stability analysis (reward: Flat Orientation, weight: -1.0)}
     \label{fig:Stability analysis (reward: Flat Orientation, weight: -1.0)}
 \end{figure}
